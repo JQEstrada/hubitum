@@ -12,10 +12,12 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Habit Hub
         </q-toolbar-title>
+        <q-btn v-if="!storeLoggedIn && routeName != '/login'" color="primary" label="Sign In" @click="navigateTo('login')" />
+        <q-btn v-if="storeLoggedIn" color="primary" label="Log Out" @click="logout()" />
 
-        <div>Quasar v{{ $q.version }}</div>
+
       </q-toolbar>
     </q-header>
 
@@ -48,6 +50,11 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { useGeneralStore } from '../stores/general'
+import { useRoute } from 'vue-router'
+
+const genStore = useGeneralStore()
+const route = useRoute()
 
 const linksList = [
   {
@@ -61,48 +68,50 @@ const linksList = [
     caption: 'github.com/quasarframework',
     icon: 'code',
     link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
   }
 ]
 
 export default defineComponent({
   name: 'MainLayout',
-
   components: {
     EssentialLink
   },
-
+   data() {
+    return {
+      routeName: ''
+    }
+  },
+  computed: {
+    storeLoggedIn() {
+      return genStore.loggedIn
+    }
+  },
+  methods: {
+    navigateTo(route) {
+      this.routeName = '/' + route
+      this.$router.push(route);
+    },
+    logout() {
+      genStore.logout()
+      this.$router.push({
+        name: 'root'
+      }
+      )
+      this.routeName = this.$route.path
+    }
+  },
+  watch: {
+    // Watch for changes in the route and update the data reactively
+    $route(to) {
+      this.routeName = to.path
+    }
+  },
+  beforeMount() {
+    this.routeName = this.$route.path
+  },
   setup () {
     const leftDrawerOpen = ref(false)
+    const genStore = useGeneralStore()
 
     return {
       essentialLinks: linksList,

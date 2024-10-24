@@ -30,8 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-
-
+      'pinia'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -89,6 +88,7 @@ module.exports = configure(function (/* ctx */) {
     devServer: {
       // https: true
       proxy: 'http://localhost:3000',
+      vueDevtools: true,
       open: true // opens browser window automatically
     },
 
@@ -107,7 +107,9 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'LocalStorage'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
