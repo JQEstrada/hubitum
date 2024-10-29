@@ -13,17 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true
     },
-    description: DataTypes.STRING,
-    frequency: DataTypes.STRING,
-    type: DataTypes.STRING
-    // habittypeId: {
-    //   type: DataTypes.INTEGER,
-    //   references: {
-    //     model: Habittype,  
-    //     key: 'id',    
-    //   },
-    //   allowNull: true
-    // }
+    description: DataTypes.STRING
   }, {
     tableName: 'Habits', // Ensure this matches the actual table name
   })

@@ -15,5 +15,8 @@ export default {
   },
   getHabit (id) {
     return Api().get(`habit-getone/${id}`)
+  },
+  getFrequencyTypes () {
+    return Api().get(`habit-getfrequencies`)
   }
 }

@@ -1,4 +1,4 @@
-const {User} = require('../models')
+const {User} = require('../../models')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 
@@ -25,6 +25,7 @@ module.exports = {
                 }
             );
         } catch (err) {
+            console.log(err)
             res.status(400).send({
                 error: 'This email account is already in use.'
             })
@@ -41,6 +42,7 @@ module.exports = {
                     }
                 }
             )
+            
             if(!user) {
                 res.status(403).send({
                     error: 'Login information invalid1.'

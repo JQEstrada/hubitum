@@ -1,12 +1,11 @@
-const { Habit, sequelize, HabitDate } = require('../models'); // Adjust the path according to your project structure
+const { sequelize, Habit, HabitDate, FrequencyType } = require('../../models'); // Adjust the path according to your project structure
 const { Sequelize } = require('sequelize'); // Import Sequelize
 
 module.exports = {
     async create (req, res) {
         try {
             //const habitRecord = await sequelize.query(`INSERT INTO Habits (name, createdAt, updatedAt) VALUES('${req.body.name}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`, { type: Sequelize.QueryTypes.SELECT });
-        console.log("Teste")
-            console.log(req)
+console.log(req.body)
             const habitRecord = await Habit.create({
                 ...req.body, 
                 userId: req.userId 
@@ -60,9 +59,21 @@ module.exports = {
         } catch (err) {
             console.log(err)
             res.status(500).send({
-                error: 'Error while trying get habit.'
+                error: 'Error while trying to get habit.'
             })
         }
+    },
+    async getFrequencyTypeList (req, res) {
+        try {            
 
+            const frequencies = await FrequencyType.findAll()
+            res.json(frequencies)
+
+        } catch (err) {
+            
+            res.status(500).send({
+                error: 'Error while trying to get frequency types.'
+            })
+        }
     }
 }

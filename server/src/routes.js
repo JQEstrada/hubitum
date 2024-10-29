@@ -25,5 +25,9 @@ module.exports = (app) => {
   app.get(
     '/habit-getone/:id',
     HabitController.getOne
+  ),
+  app.get(
+    '/habit-getfrequencies',
+    HabitController.getFrequencyTypeList
   )
 }

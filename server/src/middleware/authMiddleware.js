@@ -19,8 +19,7 @@ module.exports = (req, res, next) => {
 
     // Token is valid, extract the userId from the payload
     req.userId = decoded.id; // Assuming the token payload contains the user's ID
-    console.log("HERE!")
-    console.log(decoded)
+
     // Proceed to the next middleware or route handler
     next();
   });
