@@ -18,5 +18,8 @@ export default {
   },
   getFrequencyTypes () {
     return Api().get(`habit-getfrequencies`)
+  },
+  updateHabitDateListForUser () {
+    return Api().post(`habit-updateHabitDateListForUser`)
   }
 }

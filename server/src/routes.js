@@ -29,5 +29,9 @@ module.exports = (app) => {
   app.get(
     '/habit-getfrequencies',
     HabitController.getFrequencyTypeList
+  ),
+  app.post(
+    '/habit-updateHabitDateListForUser',
+    HabitController.updateHabitDateListForUser
   )
 }

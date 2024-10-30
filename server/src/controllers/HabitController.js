@@ -4,27 +4,38 @@ const { Sequelize } = require('sequelize'); // Import Sequelize
 module.exports = {
     async create (req, res) {
         try {
-            //const habitRecord = await sequelize.query(`INSERT INTO Habits (name, createdAt, updatedAt) VALUES('${req.body.name}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`, { type: Sequelize.QueryTypes.SELECT });
-console.log(req.body)
+
             const habitRecord = await Habit.create({
                 ...req.body, 
                 userId: req.userId 
             });
-            const habitDate = await HabitDate.create({
-                isDone: false,
-                date: new Date().setHours(0, 0, 0, 0),
-                habitId: habitRecord.id
-            })
             const habitJSON = habitRecord.toJSON()
+            const habitDate = new Date(habitRecord.startDate)
+
+            // If habit's start date is today, create HabitDate record
+            if(habitDate.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)) {
+                const habitDate = await HabitDate.create({
+                    isDone: false,
+                    date: new Date().setHours(0, 0, 0, 0),
+                    habitId: habitRecord.id
+                })
+            }
             res.send(
                 {
                     habitRecord: habitJSON
                 }
             );
         } catch (err) {
-            console.log(err)
+
+            let message = ""
+            if(err.hasOwnProperty("errors")) {
+                message = err.errors[0].message
+            } else {
+                message = 'Error when trying to create habit.'
+            }
+                
             res.status(400).send({
-                error: 'Invalid habit.'
+                error: message
             })
         }
 
@@ -32,10 +43,10 @@ console.log(req.body)
     async index (req, res) {
         try {
             
-            //const habits = await Habit.findAll()
-            const habits = await sequelize.query("SELECT * FROM Habits", { type: Sequelize.QueryTypes.SELECT });
-            //console.log(habits); // Log fetched habits
+            const habits = await sequelize.query("SELECT * FROM Habits WHERE isActive = 1", { type: Sequelize.QueryTypes.SELECT });
+            
             res.json(habits)
+
         } catch (err) {
             console.log(err)
             res.status(500).send({
@@ -47,8 +58,7 @@ console.log(req.body)
     async getOne (req, res) {
         try {            
             const {id} = req.params;
-            console.log("ID")
-            console.log(id)
+
             //const habit = await sequelize.query("SELECT * FROM Habits WHERE Id = ", { type: Sequelize.QueryTypes.SELECT });
             const habit = await Habit.findOne({
                 where: {
@@ -74,6 +84,43 @@ console.log(req.body)
             res.status(500).send({
                 error: 'Error while trying to get frequency types.'
             })
+
+        }
+    },
+    async updateHabitDateListForUser(req, res) {
+        try {
+
+            const curDate = new Date()
+            const userId = 1
+            // Fetch all active habits with latest associated date
+            const activeHabitList = await sequelize.query(
+                `SELECT h.*, hd.*
+                FROM Habits h
+                LEFT JOIN HabitDates hd ON h.id = hd.habitId
+                WHERE h.isActive = 1
+                  AND hd.date = (
+                      SELECT MAX(date)
+                      FROM HabitDates
+                      WHERE habitId = h.id
+                  );`,            
+                { type: Sequelize.QueryTypes.SELECT });
+
+            // TO DO! update Habit Dates
+
+            let list = []
+            activeHabitList.forEach(element => {
+                list.push(element)
+            });
+            res.status(200).send({
+                list: list
+            })
+
+        } catch(err) {
+            
+            res.status(500).send({
+                error: 'Error while trying to get habits.'
+            })
+
         }
     }
 }

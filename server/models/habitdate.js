@@ -15,13 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  HabitDate.init({   
-    id: {
-      type: DataTypes.INTEGER,    // Integer type
-      autoIncrement: true,        // Enable auto-increment
-      primaryKey: true,           // Set as primary key
-      allowNull: false,           // Ensure it's not null
-    },
+  HabitDate.init({
     isDone: DataTypes.BOOLEAN,
     date: DataTypes.DATEONLY
   }, {

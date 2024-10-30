@@ -40,7 +40,13 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,           // Set as primary key
       allowNull: false,           // Ensure it's not null
     },
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
+    },
     password: DataTypes.STRING
   }, {
     sequelize,

@@ -45,9 +45,15 @@ export default defineComponent({
   },
   async mounted() {
     try {
-      const response = await HabitService.getHabits();
 
-      this.habitList = response.data;
+      // To do: only call this if action has not been called for this date
+      const updateResponse = await HabitService.updateHabitDateListForUser();
+
+      const habitResponse = await HabitService.getHabits();
+
+      this.habitList = habitResponse.data;
+
+
       // To do: Set local list
 
     } catch (error) {

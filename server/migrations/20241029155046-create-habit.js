@@ -17,8 +17,7 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       description: {
         type: Sequelize.STRING
@@ -50,6 +49,15 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
+    // Add composite unique constraint
+    await queryInterface.addConstraint('Habits', {
+      fields: ['name', 'userId'],
+      type: 'unique',
+      name: 'unique_name_userId_constraint' 
+    });
+
+
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Habits');
