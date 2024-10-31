@@ -5,12 +5,14 @@ export const useGeneralStore = defineStore('general', {
   state: () => ({
     isLoggedIn: (window.localStorage.getItem('isLoggedIn') || false),
     token: (window.localStorage.getItem('userToken') || ""),
-    user: (window.localStorage.getItem('userObject') || {})
+    user: (window.localStorage.getItem('userObject') || {}),
+    isLoading: (window.localStorage.getItem('isLoading') || false)
   }),
   getters: {
     loggedIn: (state) => state.isLoggedIn,
     appToken: (state) => state.token,
-    appUser: (state) => state.user
+    appUser: (state) => state.user,
+    loading: (state) => state.isLoading
   },
   actions: {
     setLoggedIn(isLogged) {
@@ -34,6 +36,10 @@ export const useGeneralStore = defineStore('general', {
       window.localStorage.setItem('isLoggedIn', false)
       window.localStorage.setItem('user', {})
       window.localStorage.setItem('token', "")
+    },
+    setLoading(isLoading) {
+      this.isLoading = isLoading
+      window.localStorage.setItem('isLoading', isLoading)
     }
   },
 })

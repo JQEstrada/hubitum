@@ -1,5 +1,6 @@
 const { sequelize, Habit, HabitDate, FrequencyType } = require('../../models'); // Adjust the path according to your project structure
 const { Sequelize } = require('sequelize'); // Import Sequelize
+const { Dates } = require('../utils')
 
 module.exports = {
     async create (req, res) {
@@ -10,11 +11,11 @@ module.exports = {
                 userId: req.userId 
             });
             const habitJSON = habitRecord.toJSON()
-            const habitDate = new Date(habitRecord.startDate)
+            const habitStartDate = new Date(habitRecord.startDate)
 
             // If habit's start date is today, create HabitDate record
-            if(habitDate.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)) {
-                const habitDate = await HabitDate.create({
+            if(habitStartDate.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)) {
+                const habitDateRecord = await HabitDate.create({
                     isDone: false,
                     date: new Date().setHours(0, 0, 0, 0),
                     habitId: habitRecord.id
@@ -90,35 +91,64 @@ module.exports = {
     async updateHabitDateListForUser(req, res) {
         try {
 
-            const curDate = new Date()
+            const currentDate = new Date();
             const userId = 1
-            // Fetch all active habits with latest associated date
+            
+            // Fetch all active habits that don't have current date's HabitDate, with latest associated date
             const activeHabitList = await sequelize.query(
-                `SELECT h.*, hd.*
+                `SELECT h.id habitId, hd.id habitDateId, h.startDate habitStartDate, hd.date  habitDate 
                 FROM Habits h
                 LEFT JOIN HabitDates hd ON h.id = hd.habitId
                 WHERE h.isActive = 1
-                  AND hd.date = (
-                      SELECT MAX(date)
-                      FROM HabitDates
-                      WHERE habitId = h.id
-                  );`,            
+                  AND 
+                    (
+                        hd.id IS NULL OR
+                        (
+                            hd.date <> CURRENT_DATE
+                            AND hd.date = (
+                                SELECT MAX(date)
+                                FROM HabitDates
+                                WHERE habitId = h.id
+                            )
+                        )                       
+                    );`,            
                 { type: Sequelize.QueryTypes.SELECT });
+                    console.log(activeHabitList)
+            // For each habit, create all Habit Dates from last habit date present to current date
+            let totalCreations = 0
 
-            // TO DO! update Habit Dates
+            for (const element of activeHabitList) {
 
-            let list = []
-            activeHabitList.forEach(element => {
-                list.push(element)
-            });
+                const lastRegisteredDate = element.habitDate == null ? null : new Date(element.habitDate)               
+                const firstDateToRegister = lastRegisteredDate == null ? new Date(element.habitStartDate) : new Date(lastRegisteredDate.setDate(lastRegisteredDate.getDate() + 1))
+
+                let iterateDate = Dates.getOldestDatePossible(firstDateToRegister)
+                const maxIterations = 366 // Prevent more than one year of days on habit creation
+                let currentIteration = 1
+
+                while(iterateDate <= currentDate && currentIteration < maxIterations) {
+                    console.log("Creating for " + iterateDate)
+
+                    await HabitDate.create({
+                        isDone: false,
+                        date: iterateDate,
+                        habitId: element.habitId
+                    })
+                    
+                    currentIteration = currentIteration + 1
+                    totalCreations = totalCreations + 1
+                    iterateDate.setDate(iterateDate.getDate() + 1);
+                }
+
+            }
             res.status(200).send({
-                list: list
+                iterations: totalCreations 
             })
 
         } catch(err) {
-            
+            console.log(err)
             res.status(500).send({
-                error: 'Error while trying to get habits.'
+                error: 'Error while trying to create dates.'
             })
 
         }

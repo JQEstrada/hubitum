@@ -39,8 +39,8 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isFutureDate(value) {
           // Check if the instance is being created (not updated)
-          if (this.isNewRecord && new Date(value) < new Date().setHours(0, 0, 0, 0)) {
-            throw new Error('The start date must be today or a future date.');
+          if (this.isNewRecord && new Date(value) < new Date('2024-01-01').setHours(0, 0, 0, 0)) {
+            throw new Error('The start date must be later than January 1st 2024.');
           }
         }
       }

@@ -25,11 +25,22 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, watch  } from 'vue'
 import { useHabitStore } from '../stores/habits'
 import HabitService from '../services/HabitService'
+import { useGeneralStore } from '../stores/general'
 
 const habitStore = useHabitStore()
+const generalStore = useGeneralStore()
+watch(
+  () => generalStore.loading,
+  (newVal) => {
+    if (newVal) {
+      alert(generalStore)
+    }
+  },
+  { immediate: true }
+);
 
 export default defineComponent({
   name: 'HabitHomeComponent',
@@ -47,14 +58,11 @@ export default defineComponent({
     try {
 
       // To do: only call this if action has not been called for this date
-      const updateResponse = await HabitService.updateHabitDateListForUser();
+      //const updateResponse = await HabitService.updateHabitDateListForUser();
 
       const habitResponse = await HabitService.getHabits();
 
       this.habitList = habitResponse.data;
-
-
-      // To do: Set local list
 
     } catch (error) {
       console.log(error)
