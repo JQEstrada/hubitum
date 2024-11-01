@@ -1,7 +1,11 @@
 <template>
   <div>
     <!-- Main router view for the app content -->
-    <router-view />
+    <q-layout>
+      <q-page-container>
+        <router-view />
+      </q-page-container>
+    </q-layout>
     <!-- Display loading indicator based on isLoading state -->
     <div class="overlay" v-if="generalStore.loading">
         <q-spinner-gears

@@ -30,6 +30,14 @@ module.exports = (app) => {
     '/habit-getfrequencies',
     HabitController.getFrequencyTypeList
   ),
+  app.get(
+    '/habit-getunittypes',
+    HabitController.getUnitTypeList
+  ),
+  app.get(
+    '/habit-getunits',
+    HabitController.getUnitList
+  ),
   app.post(
     '/habit-updateHabitDateListForUser',
     HabitController.updateHabitDateListForUser

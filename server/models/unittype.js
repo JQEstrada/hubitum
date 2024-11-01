@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       UnitType.hasMany(models.Unit, {
-        foreignKey: 'unitId'
+        foreignKey: 'unitTypeId'
       });
     }
   }

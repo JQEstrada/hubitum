@@ -1,4 +1,4 @@
-const { sequelize, Habit, HabitDate, FrequencyType } = require('../../models'); // Adjust the path according to your project structure
+const { sequelize, Habit, HabitDate, FrequencyType, Unit, UnitType } = require('../../models'); // Adjust the path according to your project structure
 const { Sequelize } = require('sequelize'); // Import Sequelize
 const { Dates } = require('../utils')
 
@@ -45,7 +45,7 @@ module.exports = {
         try {
             
             const habits = await sequelize.query("SELECT * FROM Habits WHERE isActive = 1", { type: Sequelize.QueryTypes.SELECT });
-            
+          
             res.json(habits)
 
         } catch (err) {
@@ -84,6 +84,34 @@ module.exports = {
             
             res.status(500).send({
                 error: 'Error while trying to get frequency types.'
+            })
+
+        }
+    },
+    async getUnitTypeList (req, res) {
+        try {            
+
+            const unitTypes = await UnitType.findAll()
+            res.json(unitTypes)
+
+        } catch (err) {
+            
+            res.status(500).send({
+                error: 'Error while trying to get unit types.'
+            })
+
+        }
+    },
+    async getUnitList (req, res) {
+        try {            
+
+            const units = await Unit.findAll()
+            res.json(units)
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).send({
+                error: 'Error while trying to get units.'
             })
 
         }

@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   HabitDate.init({
     isDone: DataTypes.BOOLEAN,
-    date: DataTypes.DATEONLY
+    date: DataTypes.DATEONLY,
+    unitsDone: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'HabitDate',

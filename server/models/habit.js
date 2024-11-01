@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       Habit.hasMany(models.HabitDate, {
         foreignKey: 'habitId'
       });
+      Habit.belongsTo(models.Unit, {
+        foreignKey: 'unitId'
+      });
     }
   }
   Habit.init({   
@@ -53,6 +56,13 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: { msg: 'Habit name cannot be empty.' }
       }
     },
+    goal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Habit goal is required.' }
+      }
+    },
     description: DataTypes.STRING,
     userId: {
       type: DataTypes.INTEGER,
@@ -66,6 +76,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: 'Habit frequency is required.' }
+      }
+    },
+    unitId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Habit unit is required.' }
       }
     }
   }, {

@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       Unit.belongsTo(models.UnitType, {
         foreignKey: 'unitTypeId'
       });
+      Unit.hasMany(models.Habit, {
+        foreignKey: 'unitId'
+      });
     }
   }
   Unit.init({   
@@ -29,6 +32,16 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       unique: true
+    },
+    shortName: {
+      type: DataTypes.STRING
+    },
+    unitTypeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Unit type is required.' }
+      }
     }
   }, {
     sequelize,

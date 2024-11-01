@@ -1,12 +1,8 @@
 <template>
-  <q-page class="flex flex-center">
-    <div
-      class="q-pa-md"
-      style="text-align: center"
-    >
+  <q-page padding>
+    <q-card class="q-ma-md self-center q-pa-md" style="text-align: center">
       <div
         class="q-gutter-md"
-        style="max-width: 300px"
       >
         <q-input
           type="text"
@@ -48,7 +44,7 @@
           label="Return"
         />
         </div>
-        </div>
+    </q-card>
 
   </q-page>
 
@@ -72,19 +68,21 @@ export default {
         isActive: true,
         startDate: new Date().toISOString().split('T')[0],
         frequencyTypeId: null,
+        unitId: null,
+        goal: 1
       },
       frequencyList: [],
+      unitList: [],
+      unitTypeList: [],
       error: null,
     };
   },
   methods: {
     async create() {
       try {
-        console.log(this.Habit)
         const response = await HabitService.register(this.Habit);
         this.$router.push("/habits");
       } catch (error) {
-        console.log(error);
         this.error = error.response.data.error;
       }
     },
@@ -104,8 +102,13 @@ export default {
       const frequencyListResponse = await HabitService.getFrequencyTypes();
       this.frequencyList = frequencyListResponse.data;
 
+      const unitTypeListResponse = await HabitService.getUnitTypes();
+      this.unitTypeList = unitTypeListResponse.data;
+
+      const unitListResponse = await HabitService.getUnits();
+      this.unitList = unitListResponse.data;
+
     } catch (error) {
-      console.log(error);
       this.error = error.response.data.error;
     }
   },
