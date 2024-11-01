@@ -32,46 +32,48 @@ import { useGeneralStore } from '../stores/general'
 
 const habitStore = useHabitStore()
 const generalStore = useGeneralStore()
-watch(
-  () => generalStore.loading,
-  (newVal) => {
-    if (newVal) {
-      alert(generalStore)
-    }
-  },
-  { immediate: true }
-);
+
+
 
 export default defineComponent({
   name: 'HabitHomeComponent',
   data() {
     return {
-      habitList: []
+      habitList: [],
+      generalStore: useGeneralStore()
     }
   },
   methods: {
     goToNew() {
       this.$router.push('/create-habit')
+    },
+    async loadHabits() {
+      try {
+
+        const habitResponse = await HabitService.getHabits();
+
+        this.habitList = habitResponse.data;
+
+      } catch (error) {
+        console.log(error)
+        this.error = error.response.data.error
+      }
     }
   },
-  async mounted() {
-    try {
-
-      // To do: only call this if action has not been called for this date
-      //const updateResponse = await HabitService.updateHabitDateListForUser();
-
-      const habitResponse = await HabitService.getHabits();
-
-      this.habitList = habitResponse.data;
-
-    } catch (error) {
-      console.log(error)
-      this.error = error.response.data.error
+  mounted() {
+    if(generalStore.habitDatesFetched) {
+      this.loadHabits()
     }
-
+  },
+  watch: {
+    'generalStore.habitDatesFetched': {
+      handler(newVal) {
+        console.log(newVal)
+        if (newVal) {
+          this.loadHabits()
+        }
+      }
+    }
   }
 })
 </script>
-<style scoped>
-
-</style>

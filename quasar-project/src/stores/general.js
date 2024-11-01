@@ -6,13 +6,17 @@ export const useGeneralStore = defineStore('general', {
     isLoggedIn: (window.localStorage.getItem('isLoggedIn') || false),
     token: (window.localStorage.getItem('userToken') || ""),
     user: (window.localStorage.getItem('userObject') || {}),
-    isLoading: (window.localStorage.getItem('isLoading') || false)
+    isLoading: (window.localStorage.getItem('isLoading') || false),
+    isHabitDatesFetched: (window.localStorage.getItem('isHabitDatesFetched') || false),
+    habitDatesFetchedCurrentDay: (window.localStorage.getItem('habitDatesFetchedCurrentDay') || null)
   }),
   getters: {
     loggedIn: (state) => state.isLoggedIn,
     appToken: (state) => state.token,
     appUser: (state) => state.user,
-    loading: (state) => state.isLoading
+    loading: (state) => state.isLoading,
+    habitDatesFetched: (state) => state.isHabitDatesFetched,
+    appHabitDatesFetchedCurrentDay: (state) => state.habitDatesFetchedCurrentDay
   },
   actions: {
     setLoggedIn(isLogged) {
@@ -40,6 +44,14 @@ export const useGeneralStore = defineStore('general', {
     setLoading(isLoading) {
       this.isLoading = isLoading
       window.localStorage.setItem('isLoading', isLoading)
+    },
+    setHabitDatesFetched(isHabitDatesFetched) {
+      this.isHabitDatesFetched = isHabitDatesFetched
+      window.localStorage.setItem('isHabitDatesFetched', isHabitDatesFetched)
+    },
+    setHabitDatesFetchedCurrentDay() {
+      this.habitDatesFetchedCurrentDay = new Date(new Date().setHours(0, 0, 0, 0));
+      window.localStorage.setItem('habitDatesFetchedCurrentDay', new Date(new Date().setHours(0, 0, 0, 0)))
     }
   },
 })

@@ -1,10 +1,16 @@
 <template>
   <div>
-    <!-- Display loading indicator based on isLoading state -->
-    <q-spinner v-if="generalStore.loading" size="50px" />
-
     <!-- Main router view for the app content -->
     <router-view />
+    <!-- Display loading indicator based on isLoading state -->
+    <div class="overlay" v-if="generalStore.loading">
+        <q-spinner-gears
+          color="primary"
+          size="2em"
+        />
+        <q-tooltip :offset="[0, 8]">QSpinnerGears</q-tooltip>
+        <div>Loading your habits...</div>
+      </div>
   </div>
 </template>
 
@@ -18,11 +24,19 @@ export default defineComponent({
   name: 'App',
   async mounted() {
     const generalStore = useGeneralStore()
-      generalStore.setLoading(true)
-      setTimeout(function(){ alert('this')}, 5000)
-      // To do: only call this if action has not been called for this date
+
+    generalStore.setLoading(true)
+    generalStore.setHabitDatesFetched(false)
+    const curDay = new Date(new Date().setHours(0, 0, 0, 0))
+    if(curDay != generalStore.appHabitDatesFetchedCurrentDay) {
+
       const updateResponse = await HabitService.updateHabitDateListForUser();
-      generalStore.setLoading(false)
+
+    }
+    generalStore.setLoading(false)
+    generalStore.setHabitDatesFetched(true)
+    generalStore.setHabitDatesFetchedCurrentDay()
+
   },
   setup() {
     const generalStore = useGeneralStore();
@@ -30,3 +44,19 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.overlay {
+  align-items: center;
+  background-color: white; /* Optional: translucent background */
+  display: flex;
+  flex-direction: column; /* Stack spinner and text vertically */
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 1000; /* Ensure it's above other content */
+}
+</style>
