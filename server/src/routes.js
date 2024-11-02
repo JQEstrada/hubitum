@@ -28,6 +28,10 @@ module.exports = (app) => {
     HabitController.index
   ),
   app.get(
+    '/habit-getbydate/:date',
+    HabitController.getByDate
+  ),
+  app.get(
     '/habit-getone/:id',
     HabitController.getOne
   ),

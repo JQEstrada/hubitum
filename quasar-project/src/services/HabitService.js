@@ -22,6 +22,9 @@ export default {
   getHabits () {
     return Api().get('habit-getall')
   },
+  getDateHabits (date) {
+    return Api().get(`habit-getbydate/${date}`)
+  },
   getHabit (id) {
     return Api().get(`habit-getone/${id}`)
   },

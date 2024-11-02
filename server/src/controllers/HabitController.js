@@ -83,6 +83,44 @@ module.exports = {
             })
         }
 
+    },  
+    async getByDate (req, res) {
+      
+        const {date} = req.params;
+        console.log(date)
+        try {
+            
+            if(isNaN(new Date(date))) {
+                res.status(400).send({
+                    error: "Invalid date."
+                })
+            }
+
+            const habits = await Habit.findAll({
+                include: [
+                    {
+                        model: HabitDate,
+                        where: {
+                            date: date
+                        },
+                        required: true
+                    }
+                ],
+                where: {
+                    isActive: true
+                }
+            })
+            //const habits = await sequelize.query("SELECT * FROM Habits WHERE isActive = 1", { type: Sequelize.QueryTypes.SELECT });
+            console.log(habits)
+            res.json(habits)
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).send({
+                error: 'Error while trying get habit list.'
+            })
+        }
+
     },
     async getOne (req, res) {
         try {            
