@@ -1,8 +1,36 @@
 const { sequelize, Habit, HabitDate, FrequencyType, Unit, UnitType } = require('../../models'); // Adjust the path according to your project structure
 const { Sequelize } = require('sequelize'); // Import Sequelize
-const { Dates } = require('../utils')
+const { Dates } = require('../utils');
+const { OPEN_READWRITE } = require('sqlite3');
 
 module.exports = {
+    async save (req, res) {
+        try {
+
+            const habitRecord = await Habit.findOne({ where: { id: req.body.id } })
+            console.log(req.body.unitId)
+            await habitRecord.update(req.body)
+            const habitJSON = habitRecord.toJSON()
+            res.send(
+                {
+                    habitRecord: habitJSON
+                }
+            );
+        } catch (err) {
+            console.log(err)
+            let message = ""
+            if(err.hasOwnProperty("errors")) {
+                message = err.errors[0].message
+            } else {
+                message = 'Error when trying to update habit.'
+            }
+                
+            res.status(400).send({
+                error: message
+            })
+        }
+
+    },
     async create (req, res) {
         try {
 
@@ -32,7 +60,7 @@ module.exports = {
             if(err.hasOwnProperty("errors")) {
                 message = err.errors[0].message
             } else {
-                message = 'Error when trying to create habit.'
+                message = 'Error when trying to update habit.'
             }
                 
             res.status(400).send({

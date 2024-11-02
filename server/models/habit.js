@@ -101,7 +101,8 @@ module.exports = (sequelize, DataTypes) => {
   // Hook to handle unique constraint errors and set a custom message
   Habit.addHook('beforeValidate', (habit, options) => {
     if (!habit.name || !habit.userId) return;
-
+    console.log("Current id: " + habit.id)
+    if(habit.id != null) return 
     return Habit.findOne({ where: { name: habit.name, userId: habit.userId } })
       .then(existingHabit => {
         if (existingHabit) {

@@ -10,6 +10,15 @@ export default {
       }
     })
   },
+  save (habit) {
+    const token = localStorage.getItem('userToken'); // Retrieve JWT from localStorage
+
+    return Api().post('habit-save', habit, {
+      headers: {
+        Authorization: `Bearer ${token}` // Include JWT in Authorization header
+      }
+    })
+  },
   getHabits () {
     return Api().get('habit-getall')
   },

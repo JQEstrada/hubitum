@@ -18,6 +18,11 @@ module.exports = (app) => {
     authMiddleware,
     HabitController.create
   ),
+  app.post(
+    '/habit-save',
+    authMiddleware,
+    HabitController.save
+  ),
   app.get(
     '/habit-getall',
     HabitController.index
