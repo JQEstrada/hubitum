@@ -32,6 +32,34 @@
           map-options
           label="Select Frequency"
         />
+        <q-select
+          v-model="unitTypeId"
+          :options="unitTypeList"
+          option-value="id"
+          option-label="name"
+          filled
+          emit-value
+          map-options
+          label="Measure"
+          @update:model-value="updateUnitList"
+        />
+        <q-select
+          v-if="availableUnitList.length > 1"
+          v-model="Habit.unitId"
+          :options="availableUnitList"
+          option-value="id"
+          option-label="name"
+          filled
+          emit-value
+          map-options
+          label="Unit"
+        />
+        <q-input
+          type="number"
+          filled
+          v-model="Habit.goal"
+          label="Goal"
+        />
         <div v-html="error"></div>
         <q-btn
           color="primary"
@@ -71,9 +99,11 @@ export default {
         unitId: null,
         goal: 1
       },
+      unitTypeId: 1,
       frequencyList: [],
-      unitList: [],
       unitTypeList: [],
+      unitList: [],
+      availableUnitList: [],
       error: null,
     };
   },
@@ -89,27 +119,47 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
+    updateUnitList() {
+
+      this.availableUnitList = this.unitList.filter((unit) => { return unit.unitTypeId == this.unitTypeId })
+      if(this.availableUnitList.length) {
+        this.Habit.unitId = this.availableUnitList[0].id
+      }
+
+    }
   },
   async mounted() {
     try {
+
+      // Get all frequency types for selection
+      const frequencyListResponse = await HabitService.getFrequencyTypes();
+      this.frequencyList = frequencyListResponse.data;
+
+      // Get all unit types for selection
+      const unitTypeListResponse = await HabitService.getUnitTypes();
+      this.unitTypeList = unitTypeListResponse.data;
+
+      // Get all units for selection (depends on unit type)
+      const unitListResponse = await HabitService.getUnits();
+      this.unitList = unitListResponse.data;
+
       // If specific habit being requested, fetch by ID and pre-fill form for edition mode
       const id = this.$route.params.id;
       if (typeof id !== "undefined" && id != "") {
         const habitResponse = await HabitService.getHabit(id);
-        this.Habit = habitResponse.data;
+        this.Habit = habitResponse.data
+        const currentUnit = this.unitList.find((unit) => { return unit.id == this.Habit.unitId }) // fetch current habit's unit object
+        const currentUnitType = this.unitTypeList.find((unitType) => { return unitType.id == currentUnit.unitTypeId }) // fetch current habit unit's type object
+        this.unitTypeId = currentUnitType.id // set form's unit type
       }
 
-      const frequencyListResponse = await HabitService.getFrequencyTypes();
-      this.frequencyList = frequencyListResponse.data;
-
-      const unitTypeListResponse = await HabitService.getUnitTypes();
-      this.unitTypeList = unitTypeListResponse.data;
-
-      const unitListResponse = await HabitService.getUnits();
-      this.unitList = unitListResponse.data;
+      // Update currently available unit list (depends on unit type)
+      this.updateUnitList()
 
     } catch (error) {
+
       this.error = error.response.data.error;
+
     }
   },
 };
