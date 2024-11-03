@@ -8,7 +8,6 @@ module.exports = {
         try {
 
             const habitRecord = await Habit.findOne({ where: { id: req.body.id } })
-            console.log(req.body.unitId)
             await habitRecord.update(req.body)
             const habitJSON = habitRecord.toJSON()
             res.send(
@@ -87,7 +86,7 @@ module.exports = {
     async getByDate (req, res) {
       
         const {date} = req.params;
-        console.log(date)
+
         try {
             
             if(isNaN(new Date(date))) {
@@ -110,8 +109,7 @@ module.exports = {
                     isActive: true
                 }
             })
-            //const habits = await sequelize.query("SELECT * FROM Habits WHERE isActive = 1", { type: Sequelize.QueryTypes.SELECT });
-            console.log(habits)
+
             res.json(habits)
 
         } catch (err) {
@@ -207,7 +205,7 @@ module.exports = {
                         )                       
                     );`,            
                 { type: Sequelize.QueryTypes.SELECT });
-                    console.log(activeHabitList)
+                
             // For each habit, create all Habit Dates from last habit date present to current date
             let totalCreations = 0
 
@@ -221,7 +219,6 @@ module.exports = {
                 let currentIteration = 1
 
                 while(iterateDate <= currentDate && currentIteration < maxIterations) {
-                    console.log("Creating for " + iterateDate)
 
                     await HabitDate.create({
                         isDone: false,
@@ -246,5 +243,54 @@ module.exports = {
             })
 
         }
+    },
+    async habitUpdatecount (req, res) {
+        try {
+
+            const habitDateRecord = await HabitDate.findOne({
+                where: {
+                    id: req.body.habitDateId
+                }
+            });
+            
+            if(habitDateRecord.id == null) {
+                res.status(204) // no content
+            }
+
+            const habitRecord = await Habit.findOne({ where: { id: habitDateRecord.habitId } })
+
+
+            if(habitRecord.id == null) {
+                res.status(204) // no content
+            }
+
+            if(habitRecord.userId != req.userId) {
+                res.status(401)
+            }
+
+            const newData = { unitsDone: req.body.count }
+            await habitDateRecord.update(newData)
+
+            const habitDateJSON = habitDateRecord.toJSON()
+            
+            res.send(
+                {
+                    habitDateRecord: habitDateJSON
+                }
+            );
+        } catch (err) {
+            console.log(err)
+            let message = ""
+            if(err.hasOwnProperty("errors")) {
+                message = err.errors[0].message
+            } else {
+                message = 'Error when trying to update habit count.'
+            }
+                
+            res.status(400).send({
+                error: message
+            })
+        }
+
     }
 }

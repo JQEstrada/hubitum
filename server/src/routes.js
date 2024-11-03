@@ -50,5 +50,10 @@ module.exports = (app) => {
   app.post(
     '/habit-updateHabitDateListForUser',
     HabitController.updateHabitDateListForUser
+  ),
+  app.post(
+    '/habit-updatecount',
+    authMiddleware,
+    HabitController.habitUpdatecount
   )
 }
