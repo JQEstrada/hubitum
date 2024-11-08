@@ -42,14 +42,18 @@ module.exports = {
                     }
                 }
             )
-            
+            console.log("TESTE")
             if(!user) {
                 res.status(403).send({
                     error: 'Login information invalid1.'
                 })
                 return;
             }
+            console.log("TESTE1")
             const isPasswordValid = await user.comparePassword(password)
+            console.log("TESTE2")
+            console.log(isPasswordValid)
+            console.log("TESTE3")
             if(!isPasswordValid) {
                 res.status(403).send({
                     error: 'Login information invalid2'
@@ -64,6 +68,7 @@ module.exports = {
                 }
             );
         } catch (err) {
+            console.log(err)
             res.status(500).send({
                 error: 'Error while trying to login.'
             })

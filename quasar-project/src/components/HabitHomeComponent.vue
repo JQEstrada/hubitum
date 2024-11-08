@@ -219,7 +219,7 @@ export default defineComponent({
 
       } catch(error) {
 
-          console.log("Error: ", error)
+        console.log("Error: ", error)
 
         this.$q.notify({
           color: "negative",

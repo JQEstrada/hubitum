@@ -23,7 +23,14 @@ export default {
     return Api().get('habit-getall')
   },
   getDateHabits (date) {
-    return Api().get(`habit-getbydate/${date}`)
+
+    const token = localStorage.getItem('userToken'); // Retrieve JWT from localStorage
+
+    return Api().get(`habit-getbydate/${date}`, {
+      headers: {
+        Authorization: `Bearer ${token}` // Include JWT in Authorization header
+      }
+    })
   },
   getHabit (id) {
     return Api().get(`habit-getone/${id}`)
@@ -38,7 +45,14 @@ export default {
     return Api().get(`habit-getunits`)
   },
   updateHabitDateListForUser () {
-    return Api().post(`habit-updateHabitDateListForUser`)
+
+    const token = localStorage.getItem('userToken'); // Retrieve JWT from localStorage
+
+    return Api().post(`habit-updateHabitDateListForUser`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}` // Include JWT in Authorization header
+      }
+    })
   },
   updateHabitCount (habitDateInfo) {
 

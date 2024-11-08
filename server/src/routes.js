@@ -29,6 +29,7 @@ module.exports = (app) => {
   ),
   app.get(
     '/habit-getbydate/:date',
+    authMiddleware,
     HabitController.getByDate
   ),
   app.get(
@@ -49,6 +50,7 @@ module.exports = (app) => {
   ),
   app.post(
     '/habit-updateHabitDateListForUser',
+    authMiddleware,
     HabitController.updateHabitDateListForUser
   ),
   app.post(

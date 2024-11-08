@@ -55,10 +55,11 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.beforeSave('hashPassword', (user, options) => {
-    hashPassword(user, options)
+    return hashPassword(user, options); 
   });
 
   User.prototype.comparePassword = function(password) {
+    console.log(this.password)
     return bcrypt.compareAsync(password, this.password)
   }
 

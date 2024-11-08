@@ -88,7 +88,11 @@ module.exports = {
         const {date} = req.params;
 
         try {
-            
+
+            if(req.userId == null) {
+                res.status(401)
+            }
+
             if(isNaN(new Date(date))) {
                 res.status(400).send({
                     error: "Invalid date."
@@ -106,7 +110,8 @@ module.exports = {
                     }
                 ],
                 where: {
-                    isActive: true
+                    isActive: true,
+                    userId: req.userId
                 }
             })
 
@@ -181,17 +186,22 @@ module.exports = {
         }
     },
     async updateHabitDateListForUser(req, res) {
+        console.log("TESTE")
         try {
+            console.log(req.userId)
+
+            if(typeof req.userId == "undefined") {
+                res.status(401)
+            }
 
             const currentDate = new Date();
-            const userId = 1
             
             // Fetch all active habits that don't have current date's HabitDate, with latest associated date
             const activeHabitList = await sequelize.query(
                 `SELECT h.id habitId, hd.id habitDateId, h.startDate habitStartDate, hd.date  habitDate 
                 FROM Habits h
                 LEFT JOIN HabitDates hd ON h.id = hd.habitId
-                WHERE h.isActive = 1
+                WHERE h.isActive = 1 AND h.userId = ${req.userId}
                   AND 
                     (
                         hd.id IS NULL OR

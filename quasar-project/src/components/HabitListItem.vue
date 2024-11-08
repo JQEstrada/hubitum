@@ -5,7 +5,7 @@
   >
     <q-item-section>
       <div>{{habit.name}}</div>
-      <div>{{habit.HabitDates[0].unitsDone + " / " + habit.goal}}</div>
+      <div>{{ habit.HabitDates[0].unitsDone + " / " + habit.goal}}</div>
     </q-item-section>
 
     <q-item-section side>
@@ -87,6 +87,10 @@ export default defineComponent({
     },
   },
   methods: {
+    getUnitsDoneCount(habitDateList) {
+      console.log(habitDateList)
+      return habitDateList.reduce((sum, item) => sum + item.unitsDone, 0);
+    },
     addCount() {
       this.localCounter++;
     },
