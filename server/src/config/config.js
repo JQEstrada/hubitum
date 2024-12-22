@@ -4,6 +4,7 @@ const SQLite = require('sqlite3').verbose();
 module.exports = {
     development: {
         dialect: 'sqlite',
+        logging: console.log,
         storage: './habithubdb.sqlite', // Path to your SQLite database file
         dialectOptions: {
             mode: SQLite.OPEN_READWRITE | SQLite.OPEN_CREATE, // Ensure file creation if it doesn’t exist

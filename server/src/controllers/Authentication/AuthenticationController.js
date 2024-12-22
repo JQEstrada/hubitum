@@ -1,6 +1,6 @@
-const {User} = require('../../models')
+const {User} = require('../../../models')
 const jwt = require('jsonwebtoken')
-const config = require('../config/config')
+const config = require('../../config/config')
 
 function jwtSignUser(user) {
     const ONE_WEEK = 60 * 60 * 24 * 7
@@ -25,7 +25,7 @@ module.exports = {
                 }
             );
         } catch (err) {
-            console.log(err)
+
             res.status(400).send({
                 error: 'This email account is already in use.'
             })
@@ -42,21 +42,19 @@ module.exports = {
                     }
                 }
             )
-            console.log("TESTE")
+
             if(!user) {
                 res.status(403).send({
                     error: 'Login information invalid1.'
                 })
                 return;
             }
-            console.log("TESTE1")
+
             const isPasswordValid = await user.comparePassword(password)
-            console.log("TESTE2")
-            console.log(isPasswordValid)
-            console.log("TESTE3")
+
             if(!isPasswordValid) {
                 res.status(403).send({
-                    error: 'Login information invalid2'
+                    error: 'Login information invalid'
                 })
                 return;
             }
@@ -68,9 +66,9 @@ module.exports = {
                 }
             );
         } catch (err) {
-            console.log(err)
+
             res.status(500).send({
-                error: 'Error while trying to login.'
+                error: 'Error while trying to login.' + err
             })
         }
 

@@ -84,6 +84,11 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'Habit unit is required.' }
       }
+    },
+    streak: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,

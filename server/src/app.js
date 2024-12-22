@@ -3,8 +3,8 @@ const cors = require('cors')
 const app = express()
 const port = 3000
 const bodyParser = require('body-parser');
-const {sequelize} = require('../models')
-const config = require ('./config/config')
+// const {sequelize} = require('../models')
+// const config = require ('./config/config')
 
 app.use(cors());
 
@@ -19,7 +19,7 @@ require('./routes')(app)
 //   app.listen(config.port)
 //   console.log('Server has started on port ' + config.port)
 // })
-
+//console.log('Database path:', config.development.storage);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

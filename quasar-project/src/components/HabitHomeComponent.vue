@@ -102,6 +102,7 @@
               :key=habit.id
               :habit="habit"
               :units="unitList"
+              :currentDate="habitsDate"
               @item-clicked="handleHabitClick"
               @update-counter="handleHabitUpdateCounter"
             />
@@ -116,6 +117,7 @@
               :key=habit.id
               :habit="habit"
               :units="unitList"
+              :currentDate="habitsDate"
               @item-clicked="handleHabitClick"
               @update-counter="handleHabitUpdateCounter"
             />
@@ -130,6 +132,7 @@
               :key=habit.id
               :habit="habit"
               :units="unitList"
+              :currentDate="habitsDate"
               @item-clicked="handleHabitClick"
               @update-counter="handleHabitUpdateCounter"
             />
@@ -215,7 +218,7 @@ export default defineComponent({
       try {
 
         const habitDateUpdate = await HabitService.updateHabitCount(newCountInfo);
-        console.log(habitDateUpdate)
+        this.loadHabits()
 
       } catch(error) {
 
@@ -272,7 +275,7 @@ export default defineComponent({
     },
     async loadHabits() {
       try {
-        //const habitResponse = await HabitService.getHabits();
+
         const habitResponse = await HabitService.getDateHabits(
           new Date(this.habitsDate)
         );
@@ -288,6 +291,7 @@ export default defineComponent({
         this.monthlyHabitList = this.habitList.filter(habit => {
           return habit.frequencyTypeId == this.monthlyFrequencyTypeId;
         });
+
       } catch (error) {
         console.log(error);
         this.error = error.response.data.error;

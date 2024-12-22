@@ -7,6 +7,7 @@
       </q-page-container>
     </q-layout>
     <!-- Display loading indicator based on isLoading state -->
+
     <div class="overlay" v-if="generalStore.loading">
         <q-spinner-gears
           color="primary"
@@ -23,27 +24,36 @@ import { defineComponent } from 'vue'
 import { useGeneralStore } from './stores/general'
 import HabitService from './services/HabitService'
 
-
 export default defineComponent({
   name: 'App',
   async mounted() {
+
     const generalStore = useGeneralStore()
 
-    generalStore.setLoading(true)
-    generalStore.setHabitDatesFetched(false)
-    const curDay = new Date(new Date().setHours(0, 0, 0, 0))
-    if(curDay != generalStore.appHabitDatesFetchedCurrentDay) {
+    if(generalStore.isLogged) {
 
-      const updateResponse = await HabitService.updateHabitDateListForUser();
+      generalStore.setLoading(true)
+      generalStore.setHabitDatesFetched(false)
+      const curDay = new Date(new Date().setHours(0, 0, 0, 0))
+      //if(curDay != generalStore.appHabitDatesFetchedCurrentDay) {
+
+        const updateResponse = await HabitService.updateHabitDateListForUser();
+
+    //  }
+      generalStore.setLoading(false)
+      generalStore.setHabitDatesFetched(true)
+      generalStore.setHabitDatesFetchedCurrentDay()
+
+    } else {
+
+      generalStore.setLoading(false)
 
     }
-    generalStore.setLoading(false)
-    generalStore.setHabitDatesFetched(true)
-    generalStore.setHabitDatesFetchedCurrentDay()
 
   },
   setup() {
-    const generalStore = useGeneralStore();
+    const generalStore = useGeneralStore()
+
     return { generalStore }; // Make it accessible in the template
   }
 })
