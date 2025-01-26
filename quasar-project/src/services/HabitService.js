@@ -45,7 +45,7 @@ export default {
     return Api().get(`habit-getunits`)
   },
   updateHabitDateListForUser () {
-
+    console.log('updateHabitDateListForUser')
     const token = localStorage.getItem('userToken'); // Retrieve JWT from localStorage
 
     return Api().post(`habit-updateHabitDateListForUser`, {}, {

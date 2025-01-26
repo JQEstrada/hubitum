@@ -3,6 +3,35 @@ const { Sequelize } = require('sequelize'); // Import Sequelize
 const { Dates } = require('../../utils');
 const { Op } = require("sequelize");
 
+async function createHabitDateWithRetry(data, options, retries = 5, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            return await HabitDate.create(data, options);
+        } catch (err) {
+            if (err.code === 'SQLITE_BUSY' && i < retries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } else {
+                throw err;
+            }
+        }
+    }
+}
+
+async function commitTransactionWithRetry(transaction, retries = 5, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            await transaction.commit();
+            return;
+        } catch (err) {
+            if (err.code === 'SQLITE_BUSY' && i < retries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } else {
+                throw err;
+            }
+        }
+    }
+}
+
 module.exports = {
 
     async updateHabitDateListForUser(req, res) {
@@ -43,7 +72,7 @@ module.exports = {
                         )                       
                     );`,            
                 { type: Sequelize.QueryTypes.SELECT });
-                
+
             // For each habit, create all Habit Dates from last habit date present to current date
             let totalCreations = 0
             for (const element of activeHabitList) {
@@ -120,22 +149,34 @@ module.exports = {
 
                 }
 
-                // Create all needed habit dates
+                // Create all needed habit dates in batches
                 while(iterateDate <= currentDate && currentIteration < maxIterations) {
 
-                    await HabitDate.create({
-                        isDone: false,
-                        date: iterateDate,
-                        habitId: element.habitId
-                    })
-                    
-                    currentIteration = currentIteration + 1
-                    totalCreations = totalCreations + 1
-                    iterateDate.setDate(iterateDate.getDate() + 1)
+                    const transaction = await sequelize.transaction(); // Start a new transaction for each batch
+
+                    try {
+                        await createHabitDateWithRetry({
+                            isDone: false,
+                            date: iterateDate,
+                            habitId: element.habitId
+                        }, { transaction })
+                        
+                        currentIteration = currentIteration + 1
+                        totalCreations = totalCreations + 1
+                        iterateDate.setDate(iterateDate.getDate() + 1)
+
+                        await commitTransactionWithRetry(transaction); // Commit the transaction with retry
+                    } catch (err) {
+                        if (!transaction.finished) {
+                            await transaction.rollback(); // Rollback the transaction in case of error
+                        }
+                        throw err;
+                    }
 
                 }
 
             }
+
             res.status(200).send({
                 iterations: totalCreations 
             })

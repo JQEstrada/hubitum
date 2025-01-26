@@ -3,15 +3,20 @@
     clickable
     @click="onItemClick"
   >
-    <q-item-section>
-      <div v-if="realStreak>0" class="q-pa-md q-gutter-md">
+    <q-item-section side top>
+      <div v-if="realStreak > 0 && isCurrentDate" class="q-pa-md q-gutter-md">
         <q-badge color="blue">
           <q-icon name="trending_up" color="white" class="q-ml-xs q-mr-xs" /> {{ realStreak }}
         </q-badge>
       </div>
-      <div v-if="realStreak==0 && habit.streak > 0" class="q-pa-md q-gutter-md">
+      <div v-else-if="realStreak == 0 && habit.streak > 0 && isCurrentDate" class="q-pa-md q-gutter-md">
         <q-badge color="grey">
           <q-icon name="pending" color="white" class="q-ml-xs q-mr-xs" /> {{ realStreak }}
+        </q-badge>
+      </div>
+      <div v-else class="q-pa-md q-gutter-md" style="visibility: hidden;">
+        <q-badge color="blue">
+          <q-icon name="trending_up" color="white" class="q-ml-xs q-mr-xs" /> 0
         </q-badge>
       </div>
     </q-item-section>
@@ -94,28 +99,26 @@ export default defineComponent({
   },
   computed: {
     realStreak() {
-
-      let curStreak = 0
-
-      if(this.localCounter >= this.habit.goal) {
-        curStreak = this.habit.streak
+      let curStreak = 0;
+      if (this.localCounter >= this.habit.goal) {
+        curStreak = this.habit.streak;
       } else {
-        curStreak = this.habit.streak - 1
+        curStreak = this.habit.streak - 1;
       }
-
-      return curStreak
+      return curStreak;
+    },
+    isCurrentDate() {
+      const today = new Date().toDateString();
+      const currentDate = new Date(this.currentDate).toDateString();
+      return today === currentDate;
     }
   },
   isHabitPending() {
-
-      let habitPending = false
-
-      if(localCounter < this.habit.goal) {
-        habitPending = true
-      }
-
-      return habitPending
-
+    let habitPending = false;
+    if (localCounter < this.habit.goal) {
+      habitPending = true;
+    }
+    return habitPending;
   },
   props: ["habit", "units", "currentDate"],
   watch: {
@@ -123,6 +126,15 @@ export default defineComponent({
     counter(newValue) {
       this.localCounter = newValue;
     },
+    habit: {
+      handler(newHabit) {
+        this.currentUnit = this.units.find((unit) => { return unit.id == newHabit.unitId });
+        this.localCounter = this.getUnitsDoneCount(newHabit.HabitDates);
+        this.localInitialCount = this.getUnitsDoneCount(newHabit.HabitDates);
+      },
+      immediate: true,
+      deep: true
+    }
   },
   methods: {
     getUnitsDoneCount(habitDateList) {
@@ -141,12 +153,6 @@ export default defineComponent({
       this.$emit("update-counter", { initialCount: this.localInitialCount, count: this.localCounter, habitDateId: this.habit.id, date: this.currentDate })
       this.$refs.popupCounter.hide()
     },
-  },
-  mounted() {
-
-    this.currentUnit = this.units.find((unit) => { return unit.id == this.habit.unitId })
-    this.localCounter = this.getUnitsDoneCount(this.habit.HabitDates)
-    this.localInitialCount = this.getUnitsDoneCount(this.habit.HabitDates)
   }
 });
 </script>

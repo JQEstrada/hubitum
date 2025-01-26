@@ -9,6 +9,7 @@ const getUnitTypesAction = require('./getUnitTypes.action')
 const saveAction = require('./save.action')
 const updateHabitCountAction = require('./updateHabitCount.action')
 const updateHabitDateListForUserAction = require('./updateHabitDateListForUser.action')
+const updateHabitStreakAction = require('./updateHabitStreak.action')
 
 module.exports = (app) => {
     app.post(
@@ -55,5 +56,10 @@ module.exports = (app) => {
         '/habit-updatecount',
         authMiddleware,
         updateHabitCountAction.habitUpdatecount
+      ),
+      app.post(
+        '/habit-update-streak',
+        authMiddleware,
+        updateHabitStreakAction.updateHabitStreak
       )
 }

@@ -7,6 +7,7 @@ module.exports = {
     async getByDate (req, res) {
         
         const {date} = req.params;
+        const formattedDate = new Date(date).toISOString().split('T')[0]; // Format the date to ISO format
 
         try {
 
@@ -24,14 +25,13 @@ module.exports = {
                     error: "Invalid date."
                 })
             }
-
             // Daily habits
             const dayHabits = await Habit.findAll({
                 include: [
                     {
                         model: HabitDate,
                         where: {
-                            date: date
+                            date: formattedDate // Use the formatted date
                         },
                         required: true
                     }
@@ -45,7 +45,7 @@ module.exports = {
 
             // Weekly habits
 
-            const weekMonday = Dates.getWeekMondayFromDay(date)
+            const weekMonday = Dates.getWeekMondayFromDay(formattedDate); // Use the formatted date
             const sunday = new Date(weekMonday);
             sunday.setDate(weekMonday.getDate() + 6);
 
@@ -69,8 +69,8 @@ module.exports = {
             })
 
             // Montlhy habits
-            const firstDayOfMonth = new Date(new Date(date).getFullYear(), new Date(date).getMonth(), 1);
-            const lastDayOfMonth = new Date(new Date(date).getFullYear(), new Date(date).getMonth() + 1, 0);
+            const firstDayOfMonth = new Date(new Date(formattedDate).getFullYear(), new Date(formattedDate).getMonth(), 1);
+            const lastDayOfMonth = new Date(new Date(formattedDate).getFullYear(), new Date(formattedDate).getMonth() + 1, 0);
 
             const monthHabits = await Habit.findAll({
                 include: [

@@ -275,7 +275,7 @@ export default defineComponent({
     },
     async loadHabits() {
       try {
-
+        console.log("Loading habits for date: ", this.habitsDate);
         const habitResponse = await HabitService.getDateHabits(
           new Date(this.habitsDate)
         );
@@ -283,6 +283,8 @@ export default defineComponent({
         this.habitList = habitResponse.data;
 
         this.dailyHabitList = this.habitList.filter(habit => {
+          console.log("DAILY HABIT")
+          console.log(habit);
           return habit.frequencyTypeId == this.dailyFrequencyTypeId;
         });
         this.weeklyHabitList = this.habitList.filter(habit => {

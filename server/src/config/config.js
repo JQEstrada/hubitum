@@ -8,6 +8,7 @@ module.exports = {
         storage: './habithubdb.sqlite', // Path to your SQLite database file
         dialectOptions: {
             mode: SQLite.OPEN_READWRITE | SQLite.OPEN_CREATE, // Ensure file creation if it doesn’t exist
+            busyTimeout: 10000,
         }
     },
     test: {

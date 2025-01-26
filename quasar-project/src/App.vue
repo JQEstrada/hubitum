@@ -29,17 +29,18 @@ export default defineComponent({
   async mounted() {
 
     const generalStore = useGeneralStore()
+    console.log('App.vue mounted and not logged')
 
-    if(generalStore.isLogged) {
-
+    if(generalStore.isLoggedIn) {
+      console.log('App.vue mounted and logged')
       generalStore.setLoading(true)
       generalStore.setHabitDatesFetched(false)
       const curDay = new Date(new Date().setHours(0, 0, 0, 0))
-      //if(curDay != generalStore.appHabitDatesFetchedCurrentDay) {
+      if(curDay != generalStore.appHabitDatesFetchedCurrentDay) {
 
         const updateResponse = await HabitService.updateHabitDateListForUser();
 
-    //  }
+      }
       generalStore.setLoading(false)
       generalStore.setHabitDatesFetched(true)
       generalStore.setHabitDatesFetchedCurrentDay()
