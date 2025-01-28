@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useGeneralStore = defineStore('general', {
   state: () => ({
-    isLoggedIn: (window.localStorage.getItem('isLoggedIn') || false),
+    isLoggedIn: (window.localStorage.getItem('isLoggedIn') == "true" || false),
     token: (window.localStorage.getItem('userToken') || ""),
     user: (window.localStorage.getItem('userObject') || {}),
     isLoading: (window.localStorage.getItem('isLoading') || false),

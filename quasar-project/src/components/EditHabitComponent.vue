@@ -103,7 +103,7 @@ export default {
         unitId: null,
         goal: 1
       },
-      unitTypeId: 1,
+      unitTypeId: null,
       frequencyList: [],
       unitTypeList: [],
       unitList: [],
@@ -113,6 +113,7 @@ export default {
   },
   methods: {
     createOrEdit() {
+      console.log(this.Habit)
       if(this.Habit.id > 0) {
         this.save()
       } else {
@@ -140,9 +141,9 @@ export default {
       this.$router.go(-1);
     },
     updateUnitList(isInitialize) {
-
+      console.log("Is initialize?", isInitialize)
       this.availableUnitList = this.unitList.filter((unit) => { return unit.unitTypeId == this.unitTypeId })
-
+      console.log(this.unitList)
       // If updating lists and habit unit is not set
       if((!isInitialize || this.Habit.id == null) && this.availableUnitList.length) {
         this.Habit.unitId = this.availableUnitList[0].id

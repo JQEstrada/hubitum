@@ -6,6 +6,7 @@ module.exports = {
         try {            
 
             const units = await Unit.findAll()
+            console.log("units", units)
             res.json(units)
 
         } catch (err) {

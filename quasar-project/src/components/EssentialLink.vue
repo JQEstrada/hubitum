@@ -1,21 +1,14 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    target="_blank"
-    :href="link"
-  >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
-      <q-icon :name="icon" />
-    </q-item-section>
-
-    <q-item-section>
-      <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption>{{ caption }}</q-item-label>
-    </q-item-section>
+  <q-item clickable v-ripple>
+    <router-link :to="link" class="full-width">
+      <q-item-section avatar>
+        <q-icon :name="icon" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ title }}</q-item-label>
+        <q-item-label caption>{{ caption }}</q-item-label>
+      </q-item-section>
+    </router-link>
   </q-item>
 </template>
 
@@ -47,3 +40,13 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.full-width {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+</style>

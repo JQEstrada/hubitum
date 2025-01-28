@@ -3,6 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-btn
+          v-if="storeLoggedIn==true"
           flat
           dense
           round
@@ -12,12 +13,10 @@
         />
 
         <q-toolbar-title>
-          Habit Hub
+          Habitum
         </q-toolbar-title>
-        <q-btn v-if="!storeLoggedIn && routeName != '/login'" color="primary" label="Sign In" @click="navigateTo('login')" />
-        <q-btn v-if="storeLoggedIn" color="primary" label="Log Out" @click="logout()" />
-
-
+        <q-btn v-if="storeLoggedIn=='false' && routeName != '/login'" color="primary" label="Sign In" @click="navigateTo('login')" />
+        <q-btn v-if="storeLoggedIn==true" color="primary" label="Log Out" @click="logout()" />
       </q-toolbar>
     </q-header>
 
@@ -48,42 +47,24 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useGeneralStore } from '../stores/general'
 import { useRoute } from 'vue-router'
-
-const genStore = useGeneralStore()
-const route = useRoute()
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  }
-]
 
 export default defineComponent({
   name: 'MainLayout',
   components: {
     EssentialLink
   },
-   data() {
+  data() {
     return {
       routeName: ''
     }
   },
   computed: {
     storeLoggedIn() {
-      return genStore.loggedIn
+      return this.genStore.isLoggedIn
     }
   },
   methods: {
@@ -92,11 +73,10 @@ export default defineComponent({
       this.$router.push(route);
     },
     logout() {
-      genStore.logout()
+      this.genStore.logout()
       this.$router.push({
         name: 'root'
-      }
-      )
+      })
       this.routeName = this.$route.path
     }
   },
@@ -114,8 +94,16 @@ export default defineComponent({
     const genStore = useGeneralStore()
 
     return {
-      essentialLinks: linksList,
+      essentialLinks: [
+        {
+          title: 'Habits',
+          caption: 'My habit list',
+          icon: 'check',
+          link: '/habits'
+        }
+      ],
       leftDrawerOpen,
+      genStore,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       }

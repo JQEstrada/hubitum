@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     try {
-      await queryInterface.bulkInsert('UnitTypes', [
+      const unitTypes = await queryInterface.bulkInsert('UnitTypes', [
           {
             name: 'Times',
             isActive: true,
@@ -43,15 +43,11 @@ module.exports = {
           }
       ], { returning: true });
 
-      const unitTypes = await queryInterface.sequelize.query(
-        `SELECT id FROM UnitTypes ORDER BY createdAt DESC LIMIT 6;`
-      );
-      console.log('UnitType IDs:', unitTypeIds); // Log unit type IDs
-      const timesUnitTypeId = unitTypes[0].id
-      const volumeUnitTypeId = unitTypes[1].id
-      const distanceUnitTypeId = unitTypes[2].id
-      const timeUnitTypeId = unitTypes[3].id
-      const weightUnitTypeId = unitTypes[4].id
+      const timesUnitTypeId = unitTypes[0].id;
+      const volumeUnitTypeId = unitTypes[1].id;
+      const distanceUnitTypeId = unitTypes[2].id;
+      const timeUnitTypeId = unitTypes[3].id;
+      const weightUnitTypeId = unitTypes[4].id;
 
       await queryInterface.bulkInsert('Units', [
           {
@@ -64,7 +60,7 @@ module.exports = {
           },
           {
             name: 'Liters',
-            shortName: 'x',
+            shortName: 'L',
             isActive: true,
             unitTypeId: volumeUnitTypeId,
             createdAt: new Date(),
@@ -72,7 +68,7 @@ module.exports = {
           },
           {
             name: 'Milliliters',
-            shortName: 'x',
+            shortName: 'mL',
             isActive: true,
             unitTypeId: volumeUnitTypeId,
             createdAt: new Date(),
@@ -112,7 +108,7 @@ module.exports = {
           },
           {
             name: 'Minutes',
-            shortName: 'm',
+            shortName: 'min',
             isActive: true,
             unitTypeId: timeUnitTypeId,
             createdAt: new Date(),
@@ -141,9 +137,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-
-    await queryInterface.bulkDelete('UnitTypes', null, {});
     await queryInterface.bulkDelete('Units', null, {});
-
+    await queryInterface.bulkDelete('UnitTypes', null, {});
   }
 };

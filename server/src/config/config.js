@@ -3,13 +3,15 @@ const SQLite = require('sqlite3').verbose();
 
 module.exports = {
     development: {
-        dialect: 'sqlite',
+        dialect: 'postgres',
+        host: process.env.DEV_DB_HOST || 'localhost',
+        database: process.env.DEV_DB_NAME || 'habitum',
+        username: process.env.DEV_DB_USER || 'habitum',
+        password: process.env.DEV_DB_PASS || 'habitum',
+        port: process.env.DEV_DB_PORT || 5432,
+        username: "postgres",
+        password: "admin",
         logging: console.log,
-        storage: './habithubdb.sqlite', // Path to your SQLite database file
-        dialectOptions: {
-            mode: SQLite.OPEN_READWRITE | SQLite.OPEN_CREATE, // Ensure file creation if it doesn’t exist
-            busyTimeout: 10000,
-        }
     },
     test: {
         database: process.env.TEST_DB_NAME || 'test_habithub',

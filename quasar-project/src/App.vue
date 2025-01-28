@@ -29,9 +29,9 @@ export default defineComponent({
   async mounted() {
 
     const generalStore = useGeneralStore()
-    console.log('App.vue mounted and not logged')
+    console.log('App.vue mounted')
 
-    if(generalStore.isLoggedIn) {
+    if(generalStore.isLoggedIn == "true") {
       console.log('App.vue mounted and logged')
       generalStore.setLoading(true)
       generalStore.setHabitDatesFetched(false)
