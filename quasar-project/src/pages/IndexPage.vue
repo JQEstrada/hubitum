@@ -18,12 +18,9 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const generalStore = useGeneralStore()
-    console.log(generalStore.isLoggedIn)
+
     if (generalStore.isLoggedIn == "false") {
-      console.log('Pushing')
       router.push('/login')
-    } else {
-      console.log("Not pushing?")
     }
   }
 })
