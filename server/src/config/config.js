@@ -4,14 +4,21 @@ const SQLite = require('sqlite3').verbose();
 module.exports = {
     development: {
         dialect: 'postgres',
-        host: process.env.DEV_DB_HOST || 'localhost',
+        protocol: 'postgres',
+        dialectOptions: {
+            ssl: {
+              require: true,
+              rejectUnauthorized: false, // Important for self-signed certificates
+            },
+          },
+        host: process.env.DEV_DB_HOST || 'dpg-cue02r0gph6c73ab97eg-a.frankfurt-postgres.render.com',
         database: process.env.DEV_DB_NAME || 'habitum',
         username: process.env.DEV_DB_USER || 'habitum',
         password: process.env.DEV_DB_PASS || 'habitum',
         port: process.env.DEV_DB_PORT || 5432,
-        username: "postgres",
-        password: "admin",
-        logging: console.log,
+        username: "habitum",
+        password: "wEFrpQufJcDA054iarG8hQiInoWjQE9N",
+        logging: console.log
     },
     test: {
         database: process.env.TEST_DB_NAME || 'test_habithub',
