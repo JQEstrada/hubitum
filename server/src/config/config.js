@@ -21,30 +21,40 @@ module.exports = {
         logging: console.log
     },
     test: {
-        database: process.env.TEST_DB_NAME || 'test_habithub',
-        username: process.env.TEST_DB_USER || 'test_habithub',
-        password: process.env.TEST_DB_PASS || 'test_habithub',
-        dialect: 'sqlite',
+        dialect: 'postgres',
+        protocol: 'postgres',
         dialectOptions: {
-          mode: SQLite.OPEN_READWRITE
-        },
-        options: {
-        dialect: 'sqlite',
-        storage: ':memory:' // In-memory database for testing
-        }
+            ssl: {
+              require: true,
+              rejectUnauthorized: false, // Important for self-signed certificates
+            },
+          },
+        host: process.env.DEV_DB_HOST || 'dpg-cue02r0gph6c73ab97eg-a.frankfurt-postgres.render.com',
+        database: process.env.DEV_DB_NAME || 'habitum',
+        username: process.env.DEV_DB_USER || 'habitum',
+        password: process.env.DEV_DB_PASS || 'habitum',
+        port: process.env.DEV_DB_PORT || 5432,
+        username: "habitum",
+        password: "wEFrpQufJcDA054iarG8hQiInoWjQE9N",
+        logging: console.log
     },
     production: {
-        database: process.env.PROD_DB_NAME || 'prod_habithub',
-        username: process.env.PROD_DB_USER || 'prod_habithub',
-        password: process.env.PROD_DB_PASS || 'prod_habithub',
-        dialect: 'sqlite',
+        dialect: 'postgres',
+        protocol: 'postgres',
         dialectOptions: {
-          mode: SQLite.OPEN_READWRITE,
-        },
-        options: {
-        dialect: 'sqlite',
-        storage: 'path/to/your/production/database.sqlite'
-        }
+            ssl: {
+              require: true,
+              rejectUnauthorized: false, // Important for self-signed certificates
+            },
+          },
+        host: process.env.DEV_DB_HOST || 'dpg-cue02r0gph6c73ab97eg-a.frankfurt-postgres.render.com',
+        database: process.env.DEV_DB_NAME || 'habitum',
+        username: process.env.DEV_DB_USER || 'habitum',
+        password: process.env.DEV_DB_PASS || 'habitum',
+        port: process.env.DEV_DB_PORT || 5432,
+        username: "habitum",
+        password: "wEFrpQufJcDA054iarG8hQiInoWjQE9N",
+        logging: console.log
     },
     port: process.env.PORT || 8081,
     authentication: {
