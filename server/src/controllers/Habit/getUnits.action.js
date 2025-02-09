@@ -12,7 +12,7 @@ module.exports = {
         } catch (err) {
             console.log(err)
             res.status(500).send({
-                error: 'Error while trying to get units.'
+                error: 'Error while trying to get units.' + err
             })
 
         }
