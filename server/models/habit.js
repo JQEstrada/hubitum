@@ -109,7 +109,9 @@ module.exports = (sequelize, DataTypes) => {
     
     if(habit.id != null) return 
 
-    return habit.findOne({ where: { name: habit.name, userid: habit.userid } })
+    //    return habit.findOne({ where: { name: habit.name, userid: habit.userid } })
+    const Habit = sequelize.models.habit; // Get the model
+    return Habit.findOne({ where: { name: habit.name, userid: habit.userid } })
       .then(existingHabit => {
         if (existingHabit) {
           throw new UniqueConstraintError({
