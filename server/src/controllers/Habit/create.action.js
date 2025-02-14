@@ -31,7 +31,7 @@ module.exports = {
             if(err.hasOwnProperty("errors")) {
                 message = err.errors[0].message
             } else {
-                message = 'Error when trying to update habit.'
+                message = 'Error when trying to update habit. ' + err
             }
                 
             res.status(400).send({
