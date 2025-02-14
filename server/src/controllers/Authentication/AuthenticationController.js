@@ -51,7 +51,7 @@ module.exports = {
                 return;
             }
 
-            const isPasswordValid = await user.comparePassword(password)
+            const isPasswordValid = await userGet.comparePassword(password)
 
             if(!isPasswordValid) {
                 res.status(403).send({
