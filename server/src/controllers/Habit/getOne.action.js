@@ -1,4 +1,4 @@
-const { habit} = require('../../../models'); // Adjust the path according to your project structure
+const { habit  = require('../../../models'); // Adjust the path according to your project structure
 
 module.exports = {
 
@@ -7,12 +7,12 @@ module.exports = {
             const {id} = req.params;
 
             //const habit = await sequelize.query("SELECT * FROM Habits WHERE Id = ", { type: Sequelize.QueryTypes.SELECT });
-            const habit = await habit.findOne({
+            const habitGet = await habit.findOne({
                 where: {
                   id: id,  // Automatically sanitized by Sequelize
                 },
               });
-            res.json(habit)
+            res.json(habitGet)
         } catch (err) {
             console.log(err)
             res.status(500).send({

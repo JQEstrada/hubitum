@@ -285,13 +285,13 @@ export default defineComponent({
         this.dailyHabitList = this.habitList.filter(habit => {
           console.log("DAILY HABIT")
           console.log(habit);
-          return habit.frequencyTypeId == this.dailyFrequencyTypeId;
+          return habit.frequencytypeid == this.dailyFrequencyTypeId;
         });
         this.weeklyHabitList = this.habitList.filter(habit => {
-          return habit.frequencyTypeId == this.weeklyFrequencyTypeId;
+          return habit.frequencytypeid == this.weeklyFrequencyTypeId;
         });
         this.monthlyHabitList = this.habitList.filter(habit => {
-          return habit.frequencyTypeId == this.monthlyFrequencyTypeId;
+          return habit.frequencytypeid == this.monthlyFrequencyTypeId;
         });
 
       } catch (error) {

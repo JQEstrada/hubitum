@@ -19,11 +19,11 @@
         <q-input
           type="date"
           filled
-          v-model="Habit.startDate"
+          v-model="Habit.startdate"
           label="Start Date"
         />
         <q-select
-          v-model="Habit.frequencyTypeId"
+          v-model="Habit.frequencytypeid"
           :options="frequencyList"
           option-value="id"
           option-label="name"
@@ -45,7 +45,7 @@
         />
         <q-select
           v-if="availableUnitList.length > 1"
-          v-model="Habit.unitId"
+          v-model="Habit.unitid"
           :options="availableUnitList"
           option-value="id"
           option-label="name"
@@ -60,7 +60,7 @@
           v-model="Habit.goal"
           label="Goal"
         />
-        <q-toggle label="Current Habit?" v-model="Habit.isActive" />
+        <q-toggle label="Current Habit?" v-model="Habit.isactive" />
 
         <div v-html="error"></div>
         <q-btn
@@ -97,10 +97,10 @@ export default {
         id: null,
         name: "",
         description: "",
-        isActive: true,
-        startDate: new Date().toISOString().split('T')[0],
-        frequencyTypeId: null,
-        unitId: null,
+        isactive: true,
+        startdate: new Date().toISOString().split('T')[0],
+        frequencytypeid: null,
+        unitid: null,
         goal: 1
       },
       unitTypeId: null,
@@ -146,7 +146,7 @@ export default {
       console.log(this.unitList)
       // If updating lists and habit unit is not set
       if((!isInitialize || this.Habit.id == null) && this.availableUnitList.length) {
-        this.Habit.unitId = this.availableUnitList[0].id
+        this.Habit.unitid = this.availableUnitList[0].id
       }
 
     }
@@ -173,8 +173,8 @@ export default {
       if (typeof id !== "undefined" && id != "") {
         const habitResponse = await HabitService.getHabit(id);
         this.Habit = habitResponse.data
-        if(this.Habit.unitId == null) this.Habit.unitId = 1
-        const currentUnit = this.unitList.find((unit) => { return unit.id == this.Habit.unitId }) // fetch current habit's unit object
+        if(this.Habit.unitid == null) this.Habit.unitid = 1
+        const currentUnit = this.unitList.find((unit) => { return unit.id == this.Habit.unitid }) // fetch current habit's unit object
         console.log("Unit: ", this.Habit)
         const currentUnitType = this.unitTypeList.find((unitType) => { return unitType.id == currentUnit.unitTypeId }) // fetch current habit unit's type object
         this.unitTypeId = currentUnitType.id // set form's unit type

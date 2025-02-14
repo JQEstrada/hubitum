@@ -58,7 +58,7 @@
                 input-class="text-center"
               />
 
-              <div class="text-caption q-px-sm"><span class="text-h6">{{ currentUnit.shortName }}</span></div>
+              <div class="text-caption q-px-sm"><span class="text-h6">{{ currentUnit.shortname }}</span></div>
 
               <q-btn
                 flat
@@ -128,9 +128,9 @@ export default defineComponent({
     },
     habit: {
       handler(newHabit) {
-        this.currentUnit = this.units.find((unit) => { return unit.id == newHabit.unitId });
-        this.localCounter = this.getUnitsDoneCount(newHabit.HabitDates);
-        this.localInitialCount = this.getUnitsDoneCount(newHabit.HabitDates);
+        this.currentUnit = this.units.find((unit) => { return unit.id == newHabit.unitid });
+        this.localCounter = this.getUnitsDoneCount(newHabit.habitdates);
+        this.localInitialCount = this.getUnitsDoneCount(newHabit.habitdates);
       },
       immediate: true,
       deep: true
@@ -138,7 +138,7 @@ export default defineComponent({
   },
   methods: {
     getUnitsDoneCount(habitDateList) {
-      return habitDateList.reduce((sum, item) => sum + item.unitsDone, 0);
+      return habitDateList.reduce((sum, item) => sum + item.unitsdone, 0);
     },
     addCount() {
       this.localCounter++;
