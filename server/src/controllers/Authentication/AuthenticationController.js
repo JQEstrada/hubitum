@@ -17,8 +17,8 @@ function jwtSignUser(user) {
 module.exports = {
     async register (req, res) {
         try {
-            const user = await user.create(req.body)
-            const userJson = user.toJSON()
+            const userGet = await user.create(req.body)
+            const userJson = userGet.toJSON()
             res.send(
                 {
                     user: userJson,
@@ -36,7 +36,7 @@ module.exports = {
     async login (req, res) {
         try {
             const {email, password} = req.body;
-            const user = await user.findOne(
+            const userGet = await user.findOne(
                 {
                     where: {
                         email: email
@@ -44,7 +44,7 @@ module.exports = {
                 }
             )
 
-            if(!user) {
+            if(!userGet) {
                 res.status(403).send({
                     error: 'Login information invalid1.'
                 })
@@ -59,7 +59,7 @@ module.exports = {
                 })
                 return;
             }
-            const userJson = user.toJSON()
+            const userJson = userGet.toJSON()
             res.send(
                 {
                     user: userJson,
