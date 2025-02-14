@@ -5,19 +5,18 @@ module.exports = {
     development: {
         dialect: 'postgres',
         protocol: 'postgres',
-        dialectOptions: {
-            ssl: {
-              require: true,
-              rejectUnauthorized: false, // Important for self-signed certificates
-            },
-          },
-        host: process.env.DEV_DB_HOST || 'dpg-cue02r0gph6c73ab97eg-a.frankfurt-postgres.render.com',
+        // dialectOptions: {
+        //     ssl: {
+        //       require: true,
+        //       rejectUnauthorized: false, // Important for self-signed certificates
+        //     },
+        //   },
+        host: process.env.DEV_DB_HOST || 'localhost',
         database: process.env.DEV_DB_NAME || 'habitum',
-        username: process.env.DEV_DB_USER || 'habitum',
-        password: process.env.DEV_DB_PASS || 'habitum',
+        username: process.env.DEV_DB_USER || 'postgres',
+        password: process.env.DEV_DB_PASS || 'admin',
         port: process.env.DEV_DB_PORT || 5432,
-        username: "habitum",
-        password: "wEFrpQufJcDA054iarG8hQiInoWjQE9N",
+        password: "admin",
         logging: console.log
     },
     test: {
@@ -32,9 +31,7 @@ module.exports = {
         host: process.env.DEV_DB_HOST || 'dpg-cue02r0gph6c73ab97eg-a.frankfurt-postgres.render.com',
         database: process.env.DEV_DB_NAME || 'habitum',
         username: process.env.DEV_DB_USER || 'habitum',
-        password: process.env.DEV_DB_PASS || 'habitum',
         port: process.env.DEV_DB_PORT || 5432,
-        username: "habitum",
         password: "wEFrpQufJcDA054iarG8hQiInoWjQE9N",
         logging: console.log
     },
@@ -50,9 +47,7 @@ module.exports = {
         host: process.env.DEV_DB_HOST || 'dpg-cue02r0gph6c73ab97eg-a.frankfurt-postgres.render.com',
         database: process.env.DEV_DB_NAME || 'habitum',
         username: process.env.DEV_DB_USER || 'habitum',
-        password: process.env.DEV_DB_PASS || 'habitum',
         port: process.env.DEV_DB_PORT || 5432,
-        username: "habitum",
         password: "wEFrpQufJcDA054iarG8hQiInoWjQE9N",
         logging: console.log
     },

@@ -1,4 +1,4 @@
-const { Habit, HabitDate } = require('../../../models'); // Adjust the path according to your project structure
+const { habit, habitdate } = require('../../../models'); // Adjust the path according to your project structure
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -7,19 +7,19 @@ module.exports = {
             const { habitId } = req.params;
 
             // Fetch the habit
-            const habit = await Habit.findOne({ where: { id: habitId } });
+            const habit = await habit.findOne({ where: { id: habitId } });
             if (!habit) {
                 return res.status(404).send({ error: 'Habit not found' });
             }
 
             // Fetch all HabitDates for the habit
-            const habitDates = await HabitDate.findAll({
+            const habitDates = await habitdate.findAll({
                 where: {
-                    habitId: habitId,
+                    habitid: habitId,
                     date: {
                         [Op.lte]: new Date()
                     },
-                    unitsDone: {
+                    unitsdone: {
                         [Op.gte]: habit.goal
                     }
                 },

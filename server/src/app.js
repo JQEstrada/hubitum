@@ -1,7 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const port = 443
+const port = process.env.NODE_ENV === 'production'
+  ? 443
+  : 3000
 const bodyParser = require('body-parser');
 // const {sequelize} = require('../models')
 // const config = require ('./config/config')

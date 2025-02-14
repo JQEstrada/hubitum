@@ -5,7 +5,7 @@ module.exports = {
     async index (req, res) {
         try {
             
-            const habits = await sequelize.query("SELECT * FROM Habits WHERE isActive = 1", { type: Sequelize.QueryTypes.SELECT });
+            const habits = await sequelize.query("SELECT * FROM habits WHERE isactive = 1", { type: Sequelize.QueryTypes.SELECT });
           
             res.json(habits)
 

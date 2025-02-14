@@ -4,42 +4,42 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     try {
-      const unitTypes = await queryInterface.bulkInsert('UnitTypes', [
+      const unitTypes = await queryInterface.bulkInsert('unittypes', [
           {
             name: 'Times',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            isactive: true,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Volume',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            isactive: true,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Distance',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            isactive: true,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Time',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            isactive: true,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Weight',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            isactive: true,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Custom',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            isactive: true,
+            createdat: new Date(),
+            updatedat: new Date()
           }
       ], { returning: true });
 
@@ -49,86 +49,86 @@ module.exports = {
       const timeUnitTypeId = unitTypes[3].id;
       const weightUnitTypeId = unitTypes[4].id;
 
-      await queryInterface.bulkInsert('Units', [
+      await queryInterface.bulkInsert('units', [
           {
             name: 'Times',
-            shortName: 'x',
-            isActive: true,
-            unitTypeId: timesUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'x',
+            isactive: true,
+            unittypeid: timesUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Liters',
-            shortName: 'L',
-            isActive: true,
-            unitTypeId: volumeUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'L',
+            isactive: true,
+            unittypeid: volumeUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Milliliters',
-            shortName: 'mL',
-            isActive: true,
-            unitTypeId: volumeUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'mL',
+            isactive: true,
+            unittypeid: volumeUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Kilometers',
-            shortName: 'Km',
-            isActive: true,
-            unitTypeId: distanceUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'Km',
+            isactive: true,
+            unittypeid: distanceUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Miles',
-            shortName: 'mi',
-            isActive: true,
-            unitTypeId: distanceUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'mi',
+            isactive: true,
+            unittypeid: distanceUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Meters',
-            shortName: 'm',
-            isActive: true,
-            unitTypeId: distanceUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'm',
+            isactive: true,
+            unittypeid: distanceUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Hours',
-            shortName: 'h',
-            isActive: true,
-            unitTypeId: timeUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'h',
+            isactive: true,
+            unittypeid: timeUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Minutes',
-            shortName: 'min',
-            isActive: true,
-            unitTypeId: timeUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'min',
+            isactive: true,
+            unittypeid: timeUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Kilograms',
-            shortName: 'kg',
-            isActive: true,
-            unitTypeId: weightUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'kg',
+            isactive: true,
+            unittypeid: weightUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           },
           {
             name: 'Grams',
-            shortName: 'g',
-            isActive: true,
-            unitTypeId: weightUnitTypeId,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            shortname: 'g',
+            isactive: true,
+            unittypeid: weightUnitTypeId,
+            createdat: new Date(),
+            updatedat: new Date()
           }
       ], {});
     } catch (error) {
@@ -137,7 +137,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Units', null, {});
-    await queryInterface.bulkDelete('UnitTypes', null, {});
+    await queryInterface.bulkDelete('units', null, {});
+    await queryInterface.bulkDelete('unittypes', null, {});
   }
 };

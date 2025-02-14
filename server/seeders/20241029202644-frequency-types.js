@@ -4,30 +4,30 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
 
-     await queryInterface.bulkInsert('FrequencyTypes', [
+     await queryInterface.bulkInsert('frequencytypes', [
         {
           name: 'Daily',
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          isactive: true,
+          createdat: new Date(),
+          updatedat: new Date()
         },
         {
           name: 'Weekly',
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          isactive: true,
+          createdat: new Date(),
+          updatedat: new Date()
         },
         {
           name: 'Monthly',
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          isactive: true,
+          createdat: new Date(),
+          updatedat: new Date()
         },
         {
           name: 'Custom',
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          isactive: true,
+          createdat: new Date(),
+          updatedat: new Date()
         }
     ], {});
     
@@ -35,7 +35,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
 
-    await queryInterface.bulkDelete('FrequencyTypes', null, {});
+    await queryInterface.bulkDelete('frequencytypes', null, {});
      
   }
 };

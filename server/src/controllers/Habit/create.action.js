@@ -1,23 +1,23 @@
-const { Habit, HabitDate } = require('../../../models'); // Adjust the path according to your project structure
+const { habit, habitdate } = require('../../../models'); // Adjust the path according to your project structure
 
 module.exports = {
 
     async create (req, res) {
         try {
 
-            const habitRecord = await Habit.create({
+            const habitRecord = await habit.create({
                 ...req.body, 
-                userId: req.userId 
+                userid: req.userId 
             });
             const habitJSON = habitRecord.toJSON()
-            const habitStartDate = new Date(habitRecord.startDate)
+            const habitStartDate = new Date(habitRecord.startdate)
 
             // If habit's start date is today, create HabitDate record
             if(habitStartDate.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)) {
-                const habitDateRecord = await HabitDate.create({
-                    isDone: false,
+                const habitDateRecord = await habitdate.create({
+                    isdone: false,
                     date: new Date().setHours(0, 0, 0, 0),
-                    habitId: habitRecord.id
+                    habitid: habitRecord.id
                 })
             }
             res.send(

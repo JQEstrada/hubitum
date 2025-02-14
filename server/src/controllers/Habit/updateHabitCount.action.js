@@ -1,4 +1,4 @@
-const { Habit, HabitDate } = require('../../../models'); // Adjust the path according to your project structure
+const { habit, habitdate } = require('../../../models'); // Adjust the path according to your project structure
 const { updateHabitStreak } = require('./updateHabitStreak.action'); // Import the updateHabitStreak function
 
 module.exports = {
@@ -6,9 +6,9 @@ module.exports = {
         try {
             const countDiff = req.body.count - req.body.initialCount;
 
-            const habitDateRecord = await HabitDate.findOne({
+            const habitDateRecord = await habitdate.findOne({
                 where: {
-                    habitId: req.body.habitDateId,
+                    habitid: req.body.habitDateId,
                     date: new Date(req.body.date)
                 }
             });
@@ -17,21 +17,21 @@ module.exports = {
                 return res.status(204).send(); // no content
             }
 
-            const habitRecord = await Habit.findOne({ where: { id: habitDateRecord.habitId } });
+            const habitRecord = await habit.findOne({ where: { id: habitDateRecord.habitId } });
 
             if (!habitRecord) {
                 return res.status(204).send(); // no content
             }
 
-            if (habitRecord.userId != req.userId) {
+            if (habitRecord.userid != req.userId) {
                 return res.status(401).send(); // unauthorized
             }
 
-            const newData = { unitsDone: habitDateRecord.unitsDone + countDiff };
+            const newData = { unitsdone: habitDateRecord.unitsdone + countDiff };
             await habitDateRecord.update(newData);
 
             // Update the streak
-            await updateHabitStreak({ params: { habitId: habitRecord.id } });
+            await updateHabitStreak({ params: { habitid: habitRecord.id } });
 
             const habitDateJSON = habitDateRecord.toJSON();
 

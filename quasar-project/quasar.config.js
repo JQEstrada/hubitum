@@ -59,7 +59,9 @@ module.exports = configure(function (/* ctx */) {
         node: 'node16'
       },
 
-      vueRouterMode: 'history', // available values: 'hash', 'history'
+      //vueRouterMode: 'history', // available values: 'hash', 'history'
+      vueRouterMode: process.env.CAPACITOR ? 'hash' : 'history', // Use 'hash' for Capacitor, 'history' for web
+      publicPath: process.env.CAPACITOR ? './' : '/'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -85,12 +87,21 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
+    // devServer: {
+    //   // https: true
+    //   proxy: 'https://hubitum.onrender.com:443',
+    //   vueDevtools: true,
+    //   open: true // opens browser window automatically
+    // },
     devServer: {
-      // https: true
-      proxy: 'https://hubitum.onrender.com:443',
+      // Use environment variable to determine which server to use
+      proxy: process.env.NODE_ENV === 'production' 
+        ? 'https://hubitum.onrender.com:443'
+        : 'http://localhost:3000', // Change this port to match your local server
       vueDevtools: true,
-      open: true // opens browser window automatically
+      open: true
     },
+    
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {

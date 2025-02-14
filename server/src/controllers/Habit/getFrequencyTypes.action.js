@@ -1,11 +1,11 @@
-const { FrequencyType } = require('../../../models'); // Adjust the path according to your project structure
+const { frequencytype } = require('../../../models'); // Adjust the path according to your project structure
 
 module.exports = {
 
     async getFrequencyTypeList (req, res) {
         try {            
 
-            const frequencies = await FrequencyType.findAll()
+            const frequencies = await frequencytype.findAll()
             res.json(frequencies)
 
         } catch (err) {

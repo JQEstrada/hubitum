@@ -1,4 +1,4 @@
-const { Habit, HabitDate, FrequencyType } = require('../../../models'); // Adjust the path according to your project structure
+const { habit, habitdate, frequencytype } = require('../../../models'); // Adjust the path according to your project structure
 const { Dates } = require('../../utils');
 const { Op } = require("sequelize");
 
@@ -11,7 +11,7 @@ module.exports = {
 
         try {
 
-            const frequencies = await FrequencyType.findAll()
+            const frequencies = await frequencytype.findAll()
             const dailyFrequencyType = frequencies.find(frequency => frequency.name == "Daily" )
             const weeklyFrequencyType = frequencies.find(frequency => frequency.name == "Weekly" )
             const monthlyFrequencyType = frequencies.find(frequency => frequency.name == "Monthly" )
@@ -26,10 +26,10 @@ module.exports = {
                 })
             }
             // Daily habits
-            const dayHabits = await Habit.findAll({
+            const dayHabits = await habit.findAll({
                 include: [
                     {
-                        model: HabitDate,
+                        model: habitdate,
                         where: {
                             date: formattedDate // Use the formatted date
                         },
@@ -37,9 +37,9 @@ module.exports = {
                     }
                 ],
                 where: {
-                    frequencyTypeId: dailyFrequencyType.id,
-                    isActive: true,
-                    userId: req.userId
+                    frequencytypeid: dailyFrequencyType.id,
+                    isactive: true,
+                    userid: req.userId
                 }
             })
 
@@ -49,10 +49,10 @@ module.exports = {
             const sunday = new Date(weekMonday);
             sunday.setDate(weekMonday.getDate() + 6);
 
-            const weekHabits = await Habit.findAll({
+            const weekHabits = await habit.findAll({
                 include: [
                     {
-                        model: HabitDate,
+                        model: habitdate,
                         where: {
                             date: {
                             [Op.between]: [weekMonday, sunday]
@@ -62,9 +62,9 @@ module.exports = {
                     }
                 ],
                 where: {
-                    frequencyTypeId: weeklyFrequencyType.id,
-                    isActive: true,
-                    userId: req.userId
+                    frequencytypeid: weeklyFrequencyType.id,
+                    isactive: true,
+                    userid: req.userId
                 }
             })
 
@@ -72,10 +72,10 @@ module.exports = {
             const firstDayOfMonth = new Date(new Date(formattedDate).getFullYear(), new Date(formattedDate).getMonth(), 1);
             const lastDayOfMonth = new Date(new Date(formattedDate).getFullYear(), new Date(formattedDate).getMonth() + 1, 0);
 
-            const monthHabits = await Habit.findAll({
+            const monthHabits = await habit.findAll({
                 include: [
                     {
-                        model: HabitDate,
+                        model: habitdate,
                         where: {
                             date: {
                             [Op.between]: [firstDayOfMonth, lastDayOfMonth]
@@ -85,9 +85,9 @@ module.exports = {
                     }
                 ],
                 where: {
-                    frequencyTypeId: monthlyFrequencyType.id,
-                    isActive: true,
-                    userId: req.userId
+                    frequencytypeid: monthlyFrequencyType.id,
+                    isactive: true,
+                    userid: req.userId
                 }
             })
 

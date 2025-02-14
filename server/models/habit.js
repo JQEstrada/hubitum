@@ -5,39 +5,39 @@ const {
   Model, UniqueConstraintError
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Habit extends Model {
+  class habit extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Habit.belongsTo(models.User, {
-        foreignKey: 'userId'
+      habit.belongsTo(models.user, {
+        foreignKey: 'userid'
       });
-      Habit.belongsTo(models.FrequencyType, {
-        foreignKey: 'frequencyTypeId'
+      habit.belongsTo(models.frequencytype, {
+        foreignKey: 'frequencytypeid'
       });
-      Habit.hasMany(models.HabitDate, {
-        foreignKey: 'habitId'
+      habit.hasMany(models.habitdate, {
+        foreignKey: 'habitid'
       });
-      Habit.belongsTo(models.Unit, {
-        foreignKey: 'unitId'
+      habit.belongsTo(models.unit, {
+        foreignKey: 'unitid'
       });
     }
   }
-  Habit.init({   
+  habit.init({   
     id: {
       type: DataTypes.INTEGER,    // Integer type
       autoIncrement: true,        // Enable auto-increment
       primaryKey: true,           // Set as primary key
       allowNull: false,           // Ensure it's not null
     },
-    isActive: {
+    isactive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     },
-    startDate: {
+    startdate: {
       type: DataTypes.DATEONLY,
       validate: {
         isFutureDate(value) {
@@ -64,21 +64,21 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     description: DataTypes.STRING,
-    userId: {
+    userid: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notNull: { msg: 'Habit user error.' }
       }
     },
-    frequencyTypeId: {
+    frequencytypeid: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notNull: { msg: 'Habit frequency is required.' }
       }
     },
-    unitId: {
+    unitid: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -92,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Habit',
+    modelName: 'habit',
     indexes: [
       {
         unique: true,
@@ -104,11 +104,12 @@ module.exports = (sequelize, DataTypes) => {
 
 
   // Hook to handle unique constraint errors and set a custom message
-  Habit.addHook('beforeValidate', (habit, options) => {
-    if (!habit.name || !habit.userId) return;
-    console.log("Current id: " + habit.id)
+  habit.addHook('beforeValidate', (habit, options) => {
+    if (!habit.name || !habit.userid) return;
+    
     if(habit.id != null) return 
-    return Habit.findOne({ where: { name: habit.name, userId: habit.userId } })
+
+    return habit.findOne({ where: { name: habit.name, userid: habit.userid } })
       .then(existingHabit => {
         if (existingHabit) {
           throw new UniqueConstraintError({
@@ -120,5 +121,5 @@ module.exports = (sequelize, DataTypes) => {
   });
 
 
-  return Habit;
+  return habit;
 };

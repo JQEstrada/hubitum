@@ -3,25 +3,25 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class HabitDate extends Model {
+  class habitdate extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      HabitDate.belongsTo(models.Habit, {
-        foreignKey: 'habitId'
+      habitdate.belongsTo(models.habit, {
+        foreignKey: 'habitid'
       });
     }
   }
-  HabitDate.init({
-    isDone: DataTypes.BOOLEAN,
+  habitdate.init({
+    isdone: DataTypes.BOOLEAN,
     date: DataTypes.DATEONLY,
-    unitsDone: DataTypes.INTEGER
+    unitsdone: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'HabitDate',
+    modelName: 'habitdate',
   });
-  return HabitDate;
+  return habitdate;
 };

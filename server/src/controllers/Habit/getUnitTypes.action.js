@@ -1,11 +1,11 @@
-const { UnitType } = require('../../../models'); // Adjust the path according to your project structure
+const { unittype } = require('../../../models'); // Adjust the path according to your project structure
 
 module.exports = {
 
     async getUnitTypeList (req, res) {
         try {            
 
-            const unitTypes = await UnitType.findAll()
+            const unitTypes = await unittype.findAll()
             res.json(unitTypes)
 
         } catch (err) {

@@ -1,10 +1,10 @@
-const { Habit } = require('../../../models'); // Adjust the path according to your project structure
+const { habit } = require('../../../models'); // Adjust the path according to your project structure
 
 module.exports = {
     async save (req, res) {
         try {
 
-            const habitRecord = await Habit.findOne({ where: { id: req.body.id } })
+            const habitRecord = await habit.findOne({ where: { id: req.body.id } })
             await habitRecord.update(req.body)
             const habitJSON = habitRecord.toJSON()
             res.send(

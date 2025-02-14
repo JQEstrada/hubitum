@@ -21,19 +21,19 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class user extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Habit, {
-        foreignKey: 'userId'
+      user.hasMany(models.habit, {
+        foreignKey: 'userid'
       });
     }
   }
-  User.init({    
+  user.init({    
     id: {
       type: DataTypes.INTEGER,    // Integer type
       autoIncrement: true,        // Enable auto-increment
@@ -50,15 +50,15 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'User',
-    tableName: 'Users'
+    modelName: 'user',
+    tableName: 'users'
   });
 
-  User.beforeSave('hashPassword', (user, options) => {
+  user.beforeSave('hashPassword', (user, options) => {
     return hashPassword(user, options); 
   });
 
-  User.prototype.comparePassword = function(password) {
+  user.prototype.comparePassword = function(password) {
 
     bcrypt.compareAsync(password, this.password)
 
@@ -66,5 +66,5 @@ module.exports = (sequelize, DataTypes) => {
   }
 
 
-  return User;
+  return user;
 };

@@ -1,4 +1,4 @@
-const { sequelize, Habit, HabitDate } = require('../../../models'); // Adjust the path according to your project structure
+const { sequelize, habit, habitdate } = require('../../../models'); // Adjust the path according to your project structure
 const { Sequelize } = require('sequelize'); // Import Sequelize
 const { Dates } = require('../../utils');
 const { Op } = require("sequelize");
@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 async function createHabitDateWithRetry(data, options, retries = 5, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
-            return await HabitDate.create(data, options);
+            return await habitdate.create(data, options);
         } catch (err) {
             if (err.code === 'SQLITE_BUSY' && i < retries - 1) {
                 await new Promise(resolve => setTimeout(resolve, delay));
@@ -35,7 +35,7 @@ async function commitTransactionWithRetry(transaction, retries = 5, delay = 1000
 module.exports = {
 
     async updateHabitDateListForUser(req, res) {
-
+        
         try {
 
             if(typeof req.userId == "undefined") {
@@ -49,16 +49,16 @@ module.exports = {
                 `SELECT 
                     h.id habitId, 
                     hd.id habitDateId, 
-                    h.startDate habitStartDate, 
+                    h.startdate habitStartDate, 
                     hd.date habitDate, 
                     h.streak habitStreak, 
                     h.goal habitGoal, 
-                    hd.unitsDone habitLastUnitsDone,
+                    hd.unitsdone habitLastUnitsDone,
                     ft.name frequencyTypeName 
-                FROM Habits h
-                LEFT JOIN HabitDates hd ON h.id = hd.habitId
-                LEFT JOIN FrequencyTypes ft ON h.frequencyTypeId = ft.id
-                WHERE h.isActive = 1 AND h.userId = ${req.userId}
+                FROM habits h
+                LEFT JOIN habitdates hd ON h.id = hd.habitid
+                LEFT JOIN frequencytypes ft ON h.frequencytypeid = ft.id
+                WHERE h.isactive = TRUE AND h.userid = ${req.userId}
                   AND 
                     (
                         hd.id IS NULL OR
@@ -66,8 +66,8 @@ module.exports = {
                             hd.date <> CURRENT_DATE
                             AND hd.date = (
                                 SELECT MAX(date)
-                                FROM HabitDates
-                                WHERE habitId = h.id
+                                FROM habitdates
+                                WHERE habitid = h.id
                             )
                         )                       
                     );`,            
@@ -104,9 +104,9 @@ module.exports = {
                         const lastMonthFirstDay = new Date(firstDateToRegister).setDate(new Date(firstDateToRegister).getDate() - 7)
                         const lastMonthLastDay = new Date(firstDateToRegister).setDate(new Date(firstDateToRegister).getDate() - 1)
             
-                        const weekHabits = await HabitDate.findAll({
+                        const weekHabits = await hbitdate.findAll({
                             where: {
-                                habitId: element.habitId,
+                                habitid: element.habitId,
                                 date: {
                                     [Op.between]: [lastWeekMonday, lastWeekSunday]
                                 }
@@ -122,9 +122,9 @@ module.exports = {
                         const lastMonthFirstDay = Dates.getWsubtractMonth(Date(firstDateToRegister), 1)
                         const lastMonthLastDay = new Date(firstDateToRegister).setDate(new Date(firstDateToRegister).getDate() - 1)
             
-                        const monthHabits = await HabitDate.findAll({
+                        const monthHabits = await hbitdate.findAll({
                             where: {
-                                habitId: element.habitId,
+                                habitid: element.habitId,
                                 date: {
                                     [Op.between]: [lastMonthFirstDay, lastMonthLastDay]
                                 }
@@ -139,7 +139,7 @@ module.exports = {
                     // If habit streak didn't exist or was interrupted, write 1. Else, increment streak
                     const newStreak = element.habitStreak == null ? 1 : (lastUnitsDone >= element.habitGoal ? element.habitStreak + 1 : 1)
                     const newData = { streak: newStreak }        
-                    const habitRecord = await Habit.findOne({
+                    const habitRecord = await habit.findOne({
                         where: {
                             id: element.habitId
                         }
@@ -156,9 +156,9 @@ module.exports = {
 
                     try {
                         await createHabitDateWithRetry({
-                            isDone: false,
+                            isdne: false,
                             date: iterateDate,
-                            habitId: element.habitId
+                            habitid: element.habitId
                         }, { transaction })
                         
                         currentIteration = currentIteration + 1
@@ -184,7 +184,7 @@ module.exports = {
         } catch(err) {
             console.log(err)
             res.status(500).send({
-                error: 'Error while trying to create dates.'
+                error: 'Error while trying to create dates: ' + err
             })
 
         }
