@@ -1,4 +1,4 @@
-const { habit  = require('../../../models'); // Adjust the path according to your project structure
+const { habit } = require('../../../models'); // Adjust the path according to your project structure
 
 module.exports = {
 
