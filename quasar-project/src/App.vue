@@ -35,8 +35,9 @@ export default defineComponent({
       generalStore.setLoading(true)
       generalStore.setHabitDatesFetched(false)
       const curDay = new Date(new Date().setHours(0, 0, 0, 0))
+      
         console.log(generalStore.appHabitDatesFetchedCurrentDay)
-      if(curDay != generalStore.appHabitDatesFetchedCurrentDay) {
+      if(true || curDay != generalStore.appHabitDatesFetchedCurrentDay) {
         console.log('NOW!')
         const updateResponse = await HabitService.updateHabitDateListForUser();
 

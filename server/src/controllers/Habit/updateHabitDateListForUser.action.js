@@ -47,14 +47,14 @@ module.exports = {
             // Fetch all active habits that don't have current date's HabitDate, with latest associated date
             const activeHabitList = await sequelize.query(
                 `SELECT 
-                    h.id habitId, 
-                    hd.id habitDateId, 
-                    h.startdate habitStartDate, 
-                    hd.date habitDate, 
-                    h.streak habitStreak, 
-                    h.goal habitGoal, 
-                    hd.unitsdone habitLastUnitsDone,
-                    ft.name frequencyTypeName 
+                    h.id habitid, 
+                    hd.id habitdateid, 
+                    h.startdate habitstartdate, 
+                    hd.date habitdate, 
+                    h.streak habitstreak, 
+                    h.goal habitgoal, 
+                    hd.unitsdone habitlastunitsdone,
+                    ft.name frequencytypename 
                 FROM habits h
                 LEFT JOIN habitdates hd ON h.id = hd.habitid
                 LEFT JOIN frequencytypes ft ON h.frequencytypeid = ft.id
@@ -77,8 +77,8 @@ module.exports = {
             let totalCreations = 0
             for (const element of activeHabitList) {
 
-                const lastRegisteredDate = element.habitDate == null ? null : new Date(element.habitDate)               
-                const firstDateToRegister = lastRegisteredDate == null ? new Date(element.habitStartDate) : new Date(lastRegisteredDate.setDate(lastRegisteredDate.getDate() + 1))
+                const lastRegisteredDate = element.habitdate == null ? null : new Date(element.habitdate)               
+                const firstDateToRegister = lastRegisteredDate == null ? new Date(element.habitstartdate) : new Date(lastRegisteredDate.setDate(lastRegisteredDate.getDate() + 1))
 
                 let iterateDate = Dates.getOldestDatePossible(firstDateToRegister)
                 const maxIterations = 366 // Prevent more than one year of days on habit creation
@@ -86,62 +86,62 @@ module.exports = {
 
                 // If daily habit was registered until yesterday, or weekly habit and current day is monday, update streak
                 if(
-                    (element.frequencyTypeName == "Daily" && new Date(firstDateToRegister).toDateString() == new Date().toDateString())
+                    (element.frequencytypename == "Daily" && new Date(firstDateToRegister).toDateString() == new Date().toDateString())
                     ||
-                    (element.frequencyTypeName == "Weekly" && new Date(firstDateToRegister).getDay() == 1)
+                    (element.frequencytypename == "Weekly" && new Date(firstDateToRegister).getDay() == 1)
                     ||
-                    (element.frequencyTypeName == "Monthly" && new Date(firstDateToRegister).getDate() == 1)
+                    (element.frequencytypename == "Monthly" && new Date(firstDateToRegister).getDate() == 1)
                 ) { 
 
                     let lastUnitsDone = 0
 
-                    if(element.frequencyTypeName == "Daily") {
-                        lastUnitsDone = element.habitLastUnitsDone
+                    if(element.frequencytypename == "Daily") {
+                        lastUnitsDone = element.habitlastunitsdone
                     }
 
-                    if(element.frequencyTypeName == "Weekly") {
+                    if(element.frequencytypename == "Weekly") {
 
                         const lastMonthFirstDay = new Date(firstDateToRegister).setDate(new Date(firstDateToRegister).getDate() - 7)
                         const lastMonthLastDay = new Date(firstDateToRegister).setDate(new Date(firstDateToRegister).getDate() - 1)
             
-                        const weekHabits = await hbitdate.findAll({
+                        const weekHabits = await habitdate.findAll({
                             where: {
-                                habitid: element.habitId,
+                                habitid: element.habitid,
                                 date: {
                                     [Op.between]: [lastWeekMonday, lastWeekSunday]
                                 }
                             }
                         })
                         
-                        lastUnitsDone = weekHabits.reduce((sum, item) => sum + item.unitsDone, 0);
+                        lastUnitsDone = weekHabits.reduce((sum, item) => sum + item.unitsdone, 0);
 
                     }
 
-                    if(element.frequencyTypeName == "Monthly") {
+                    if(element.frequencytypename == "Monthly") {
 
                         const lastMonthFirstDay = Dates.getWsubtractMonth(Date(firstDateToRegister), 1)
                         const lastMonthLastDay = new Date(firstDateToRegister).setDate(new Date(firstDateToRegister).getDate() - 1)
             
-                        const monthHabits = await hbitdate.findAll({
+                        const monthHabits = await habitdate.findAll({
                             where: {
-                                habitid: element.habitId,
+                                habitid: element.habitid,
                                 date: {
                                     [Op.between]: [lastMonthFirstDay, lastMonthLastDay]
                                 }
                             }
                         })
                         
-                        lastUnitsDone = monthHabits.reduce((sum, item) => sum + item.unitsDone, 0);
+                        lastUnitsDone = monthHabits.reduce((sum, item) => sum + item.unitsdone, 0);
 
                     }
 
         
                     // If habit streak didn't exist or was interrupted, write 1. Else, increment streak
-                    const newStreak = element.habitStreak == null ? 1 : (lastUnitsDone >= element.habitGoal ? element.habitStreak + 1 : 1)
+                    const newStreak = element.habitstreak == null ? 1 : (lastUnitsDone >= element.habitgoal ? element.habitstreak + 1 : 1)
                     const newData = { streak: newStreak }        
                     const habitRecord = await habit.findOne({
                         where: {
-                            id: element.habitId
+                            id: element.habitid
                         }
                     });
 
@@ -158,7 +158,7 @@ module.exports = {
                         await createHabitDateWithRetry({
                             isdne: false,
                             date: iterateDate,
-                            habitid: element.habitId
+                            habitid: element.habitid
                         }, { transaction })
                         
                         currentIteration = currentIteration + 1
