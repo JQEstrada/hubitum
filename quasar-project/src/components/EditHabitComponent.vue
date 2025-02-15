@@ -142,7 +142,7 @@ export default {
     },
     updateUnitList(isInitialize) {
       console.log("Is initialize?", isInitialize)
-      this.availableUnitList = this.unitList.filter((unit) => { return unit.unitTypeId == this.unitTypeId })
+      this.availableUnitList = this.unitList.filter((unit) => { return unit.unittypeid == this.unitTypeId })
       console.log(this.unitList)
       // If updating lists and habit unit is not set
       if((!isInitialize || this.Habit.id == null) && this.availableUnitList.length) {
@@ -176,7 +176,7 @@ export default {
         if(this.Habit.unitid == null) this.Habit.unitid = 1
         const currentUnit = this.unitList.find((unit) => { return unit.id == this.Habit.unitid }) // fetch current habit's unit object
         console.log("Unit: ", this.Habit)
-        const currentUnitType = this.unitTypeList.find((unitType) => { return unitType.id == currentUnit.unitTypeId }) // fetch current habit unit's type object
+        const currentUnitType = this.unitTypeList.find((unitType) => { return unitType.id == currentUnit.unittypeid }) // fetch current habit unit's type object
         this.unitTypeId = currentUnitType.id // set form's unit type
       }
 
@@ -186,7 +186,7 @@ export default {
       generalStore.setLoading(false)
 
     } catch (error) {
-
+      console.log(error)
       this.error = error.response.data.error;
 
     }

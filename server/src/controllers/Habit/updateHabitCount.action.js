@@ -17,7 +17,7 @@ module.exports = {
                 return res.status(204).send(); // no content
             }
 
-            const habitRecord = await habit.findOne({ where: { id: habitDateRecord.habitId } });
+            const habitRecord = await habit.findOne({ where: { id: habitDateRecord.habitid } });
 
             if (!habitRecord) {
                 return res.status(204).send(); // no content
@@ -44,7 +44,7 @@ module.exports = {
             if (err.hasOwnProperty("errors")) {
                 message = err.errors[0].message;
             } else {
-                message = 'Error when trying to update habit count.';
+                message = 'Error when trying to update habit count: ' + err;
             }
 
             res.status(400).send({
