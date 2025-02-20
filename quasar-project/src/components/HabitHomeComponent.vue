@@ -15,16 +15,17 @@
       style="text-align: center"
     >
 
-      <div class="row items-center justify-between q-my-md">
+      <div class="row items-center justify-between q-my-md q-gutter-xs">
         <q-btn
           flat
           round
           icon="arrow_back"
           @click="goDateBack"
+          class="col-shrink"
         />
 
-        <div class="text-h6 text-center">
-          {{ this.habitsDate.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }) }}
+        <div class="text-h6 text-center col-grow date-text">
+          {{ this.habitsDate.toLocaleDateString("en-US", { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) }}
           <q-icon
             name="event"
             size="md"
@@ -49,10 +50,9 @@
                     color="primary"
                   />
                 </div>
-                </q-date>
-                </q-popup-proxy>
-                </q-icon>
-
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
         </div>
 
         <q-btn
@@ -61,6 +61,7 @@
           round
           icon="arrow_forward"
           @click="goDateForward"
+          class="col-shrink"
         />
 
       </div>
@@ -244,7 +245,7 @@ export default defineComponent({
     },
     async loadData() {
       try {
-
+        generalStore.setLoading(true)
         // Get all units for selection (depends on unit type)
         const unitListResponse = await HabitService.getUnits();
         this.unitList = unitListResponse.data;
@@ -267,14 +268,19 @@ export default defineComponent({
           }
         )[0].id;
 
-        this.loadHabits();
+        this.loadHabits(true);
       } catch (error) {
         console.log(error);
         this.error = error.response.data.error;
+      } finally {
+        generalStore.setLoading(false)
       }
     },
-    async loadHabits() {
+    async loadHabits(noLoad = false) {
       try {
+        if (!noLoad) {
+          generalStore.setLoading(true);
+        }
         console.log("Loading habits for date: ", this.habitsDate);
         const habitResponse = await HabitService.getDateHabits(
           new Date(this.habitsDate)
@@ -297,6 +303,10 @@ export default defineComponent({
       } catch (error) {
         console.log(error);
         this.error = error.response.data.error;
+      } finally {
+        if(!noLoad) {
+          generalStore.setLoading(false);
+        }
       }
     },
   },
@@ -304,6 +314,13 @@ export default defineComponent({
     if (generalStore.habitDatesFetched) {
       this.loadData();
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (vm.generalStore.habitDatesFetched) {
+        vm.loadData();
+      }
+    });
   },
   watch: {
     "generalStore.habitDatesFetched": {
@@ -317,3 +334,21 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.date-text {
+  font-size: 1.7rem;
+}
+
+@media (max-width: 500px) {
+  .date-text {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .date-text {
+    font-size: 1rem;
+  }
+}
+</style>
