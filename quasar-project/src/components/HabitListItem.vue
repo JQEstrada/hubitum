@@ -4,6 +4,7 @@
     @click="onItemClick"
   >
     <q-item-section side top>
+      {{ this.realStreak + " / " + isCurrentDate }}
       <div v-if="realStreak > 0 && isCurrentDate" class="q-pa-md q-gutter-md">
         <q-badge color="blue">
           <q-icon name="trending_up" color="white" class="q-ml-xs q-mr-xs" /> {{ realStreak }}

@@ -4,23 +4,23 @@ const { Op } = require("sequelize");
 module.exports = {
     async updateHabitStreak(req, res) {
         try {
-            const { habitId } = req.params;
+            const { habitid } = req.params;
 
             // Fetch the habit
-            const habit = await habit.findOne({ where: { id: habitId } });
-            if (!habit) {
+            const habitRec = await habit.findOne({ where: { id: habitid } });
+            if (!habitRec) {
                 return res.status(404).send({ error: 'Habit not found' });
             }
 
             // Fetch all HabitDates for the habit
             const habitDates = await habitdate.findAll({
                 where: {
-                    habitid: habitId,
+                    habitid: habitid,
                     date: {
                         [Op.lte]: new Date()
                     },
                     unitsdone: {
-                        [Op.gte]: habit.goal
+                        [Op.gte]: habitRec.goal
                     }
                 },
                 order: [['date', 'DESC']]
@@ -40,7 +40,7 @@ module.exports = {
             }
 
             // Update the habit's streak
-            await habit.update({ streak });
+            await habitRec.update({ streak });
 
             if (res && typeof res.status === 'function') {
                 res.status(200).send({ streak });

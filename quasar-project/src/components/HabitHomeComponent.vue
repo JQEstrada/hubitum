@@ -175,6 +175,7 @@ export default defineComponent({
   },
   data() {
     return {
+
       habitsDate: new Date(),
       habitList: [],
       unitList: [],

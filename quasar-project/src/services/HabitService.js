@@ -57,7 +57,7 @@ export default {
   updateHabitCount (habitDateInfo) {
 
     const token = localStorage.getItem('userToken'); // Retrieve JWT from localStorage
-
+    console.log(habitDateInfo)
     return Api().post('habit-updatecount', habitDateInfo, {
       headers: {
         Authorization: `Bearer ${token}` // Include JWT in Authorization header
