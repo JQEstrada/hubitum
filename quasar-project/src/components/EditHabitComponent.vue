@@ -19,6 +19,7 @@
         <q-input
           type="date"
           filled
+          readonly
           v-model="Habit.startdate"
           label="Start Date"
         />

@@ -289,17 +289,22 @@ export default defineComponent({
 
         this.habitList = habitResponse.data;
 
+
+
         this.dailyHabitList = this.habitList.filter(habit => {
-          console.log("DAILY HABIT")
-          console.log(habit);
           return habit.frequencytypeid == this.dailyFrequencyTypeId;
         });
+        this.dailyHabitList.sort((a, b) => a.name.localeCompare(b.name));
+
         this.weeklyHabitList = this.habitList.filter(habit => {
           return habit.frequencytypeid == this.weeklyFrequencyTypeId;
         });
+        this.weeklyHabitList.sort((a, b) => a.name.localeCompare(b.name));
+
         this.monthlyHabitList = this.habitList.filter(habit => {
           return habit.frequencytypeid == this.monthlyFrequencyTypeId;
         });
+        this.monthlyHabitList.sort((a, b) => a.name.localeCompare(b.name));
 
       } catch (error) {
         console.log(error);

@@ -4,15 +4,14 @@
     @click="onItemClick"
   >
     <q-item-section side top>
-      {{ this.realStreak + " / " + isCurrentDate }}
       <div v-if="realStreak > 0 && isCurrentDate" class="q-pa-md q-gutter-md">
         <q-badge color="blue">
           <q-icon name="trending_up" color="white" class="q-ml-xs q-mr-xs" /> {{ realStreak }}
         </q-badge>
       </div>
-      <div v-else-if="realStreak == 0 && habit.streak > 0 && isCurrentDate" class="q-pa-md q-gutter-md">
+      <div v-else-if="localCounterPreviousDay >= habit.goal && isCurrentDate" class="q-pa-md q-gutter-md">
         <q-badge color="grey">
-          <q-icon name="pending" color="white" class="q-ml-xs q-mr-xs" /> {{ realStreak }}
+          <q-icon name="pending" color="white" class="q-ml-xs q-mr-xs" />
         </q-badge>
       </div>
       <div v-else class="q-pa-md q-gutter-md" style="visibility: hidden;">
@@ -94,6 +93,7 @@ export default defineComponent({
   data() {
     return {
       localCounter: 0,
+      localCounterPreviousDay: 0,
       localInitialCount: 0,
       currentUnit: ""
     };
@@ -129,17 +129,27 @@ export default defineComponent({
     },
     habit: {
       handler(newHabit) {
+
+        // Sort habitdates by date in descending order
+        newHabit.habitdates.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         this.currentUnit = this.units.find((unit) => { return unit.id == newHabit.unitid });
-        this.localCounter = this.getUnitsDoneCount(newHabit.habitdates);
-        this.localInitialCount = this.getUnitsDoneCount(newHabit.habitdates);
+        this.localCounter = this.getUnitsDoneCount(newHabit.habitdates[0]);
+        if(newHabit.habitdates.length > 1) {
+          this.localCounterPreviousDay = this.getUnitsDoneCount(newHabit.habitdates[1]);
+        }
+        //this.localInitialCount = this.getUnitsDoneCount(newHabit.habitdates);
+        this.localInitialCount = this.localCounter;
       },
       immediate: true,
       deep: true
     }
   },
   methods: {
-    getUnitsDoneCount(habitDateList) {
-      return habitDateList.reduce((sum, item) => sum + item.unitsdone, 0);
+    getUnitsDoneCount(habitDate) {
+      console.log(habitDate.unitsdone)
+      //return habitDateList.reduce((sum, item) => sum + item.unitsdone, 0);
+      return habitDate.unitsdone;
     },
     addCount() {
       this.localCounter++;

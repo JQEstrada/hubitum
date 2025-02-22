@@ -6,8 +6,12 @@ module.exports = {
 
     async getByDate (req, res) {
         
-        const {date} = req.params;
+        const { date } = req.params;
         const formattedDate = new Date(date).toISOString().split('T')[0]; // Format the date to ISO format
+        const formattedDateObj = new Date(formattedDate); // Create a Date object from the formatted date
+        const formattedDateLastDay = new Date(formattedDateObj);
+        formattedDateLastDay.setDate(formattedDateObj.getDate() - 1);
+        const formattedDateLastDayISO = formattedDateLastDay.toISOString().split('T')[0]; // Format the previous day to ISO format
 
         try {
 
@@ -25,15 +29,19 @@ module.exports = {
                     error: "Invalid date."
                 })
             }
+
             // Daily habits
             const dayHabits = await habit.findAll({
                 include: [
                     {
                         model: habitdate,
-                        where: {
-                            date: formattedDate // Use the formatted date
+                        where: {                            
+                            date: {
+                                [Op.in]: [formattedDate, formattedDateLastDayISO] // Use the formatted dates
+                            }
                         },
-                        required: true
+                        required: true,
+                        order: [['date', 'DESC']]
                     }
                 ],
                 where: {
