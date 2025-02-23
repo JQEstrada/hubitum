@@ -1,5 +1,10 @@
 {
-  "appId": "org.capacitor.quasar.habitum",
-  "appName": "habithub",
-  "webDir": "www"
+  "appId": "Habitum",
+  "appName": "Habitum",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "versionCode": 2,
+    "versionName": "0.2"
+  }
 }

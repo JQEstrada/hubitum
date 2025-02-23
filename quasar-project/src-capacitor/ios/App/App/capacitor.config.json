@@ -1,0 +1,13 @@
+{
+	"appId": "Habitum",
+	"appName": "Habitum",
+	"webDir": "www",
+	"packageClassList": [
+		"AppPlugin"
+	],
+  "bundledWebRuntime": false,
+  "android": {
+    "versionCode": 2,
+    "versionName": "0.2"
+  }
+}
